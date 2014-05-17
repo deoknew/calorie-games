@@ -114,6 +114,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ball: {fileID: 400000, guid: 9f0a63b4a66e4cf41b048a3b6c7854ec, type: 2}
   power: 2900
+  z_power: 0
   x_power: 0
 --- !u!1 &708290124
 GameObject:
@@ -244,8 +245,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 914330494}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 37.97295, y: 6.87147141, z: 24.2894516}
+  m_LocalRotation: {x: 0, y: 0, z: .196759865, w: .980451763}
+  m_LocalPosition: {x: 37.97295, y: 5.27225876, z: 21.8005981}
   m_LocalScale: {x: .460503519, y: 3.39823294, z: 4.12656403}
   m_Children: []
   m_Father: {fileID: 0}
@@ -335,8 +336,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1550240695}
-  m_LocalRotation: {x: 0, y: .713349104, z: 0, w: .700808942}
-  m_LocalPosition: {x: 23.3964386, y: 6.70000458, z: 19.8040886}
+  m_LocalRotation: {x: -.120644741, y: .702699184, z: .122803569, w: .690346301}
+  m_LocalPosition: {x: 30.23592, y: 2.00726628, z: 19.6827793}
   m_LocalScale: {x: 1, y: 2.27103043, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

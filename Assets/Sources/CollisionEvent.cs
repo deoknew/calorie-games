@@ -6,10 +6,17 @@ public class CollisionEvent : MonoBehaviour {
 	public Transform explode;
 	// Use this for initialization
 
+	void Update() {
+		if (transform.position.x <= 24)
+						Destroy (gameObject);
+	}
 	void OnCollisionEnter (Collision Collsion) {
-		//this.gameObject.rigidbody.AddForce (0,1 * power,1 * power);
-		Object obj = Instantiate (explode, transform.position, Quaternion.identity);
+		if (!Collsion.collider.tag.Equals ("BALL")) 
+		{
 
-		Destroy (gameObject, 1);
+						Transform obj = (Transform)Instantiate (explode, transform.position, Quaternion.identity);
+						Destroy (gameObject, 1);
+						Destroy(obj.gameObject,1);
+		}
 	}
 }
