@@ -1,22 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CollisionEvent : MonoBehaviour {
-	public int power=1000;
-	public Transform explode;
-	// Use this for initialization
+public class CollisionEvent : MonoBehaviour 
+{
+	public Transform collisionParticle;
 
-	void Update() {
-		if (transform.position.x <= 24)
-						Destroy (gameObject);
+
+	void Update() 
+	{
+
 	}
-	void OnCollisionEnter (Collision Collsion) {
-		if (!Collsion.collider.tag.Equals ("BALL")) 
-		{
 
-						Transform obj = (Transform)Instantiate (explode, transform.position, Quaternion.identity);
-						Destroy (gameObject, 1);
-						Destroy(obj.gameObject,1);
+
+	void OnCollisionEnter (Collision collision) 
+	{
+		if (!collision.collider.tag.Equals("Non-Explosion")) 
+		{
+			Transform obj = (Transform)Instantiate (collisionParticle, transform.position, Quaternion.identity);
+			Destroy(obj.gameObject, 1);
 		}
+		Destroy (gameObject);
 	}
 }
