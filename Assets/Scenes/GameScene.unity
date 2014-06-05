@@ -101,10 +101,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adb396309482ad44380cc1fcfad0fb3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectile: {fileID: 400000, guid: 9f0a63b4a66e4cf41b048a3b6c7854ec, type: 2}
+  projectile1: {fileID: 400000, guid: 9f0a63b4a66e4cf41b048a3b6c7854ec, type: 2}
+  projectile2: {fileID: 400000, guid: 228b70efe88403c4d965ecf36312c5f0, type: 2}
+  projectile3: {fileID: 400000, guid: b6f38eba769daf542a71bab8fb435f0a, type: 2}
+  projectile4: {fileID: 400000, guid: 69ab03be23b1a60429a6c5a3ee9d8e3b, type: 2}
+  projectile5: {fileID: 400000, guid: 8146b14f673cf054f9cdadfc407fb0e7, type: 2}
   powerX: 0
   powerY: 2900
   powerZ: 0
+  matKind: 0
   throwRate: .100000001
 --- !u!4 &109195232
 Transform:
