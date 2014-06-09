@@ -8,6 +8,8 @@ public class CollisionEvent : MonoBehaviour
 
 	void Update() 
 	{
+		if (transform.position.z <= 12)
+			Destroy (gameObject);
 
 	}
 

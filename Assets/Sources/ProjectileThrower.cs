@@ -6,6 +6,7 @@ public class ProjectileThrower : MonoBehaviour
 	private const string THROWING_POINT_NAME = "Throwing_Point";
 
 	public Transform projectile1,projectile2,projectile3,projectile4,projectile5;
+	public Transform projectile6, projectile7, projectile8;
 
 	public int powerX;
 	public int powerY;
@@ -25,9 +26,9 @@ public class ProjectileThrower : MonoBehaviour
 
 	void Update () 
 	{
-		powerZ = Random.Range (2400, 3000);
-		powerX = Random.Range (-700, 700);
-		matKind = (int)Random.Range (1, 6);
+		powerZ = Random.Range (2600, 3000);
+		powerX = Random.Range (-500, 500);
+		matKind = (int)Random.Range (1, 9);
 		if (Random.Range (0, 1000) < (int)(throwRate * 100.0f))
 			FireBullet ();
 	}
@@ -60,6 +61,21 @@ public class ProjectileThrower : MonoBehaviour
 		else if (matKind == 5) 
 		{
 			Transform obj = Instantiate (projectile5, startPoint.position, Quaternion.identity) as Transform; 
+			obj.rigidbody.AddForce (powerX, 0.3f * powerY, powerZ * -1);
+		}
+		else if (matKind == 6) 
+		{
+			Transform obj = Instantiate (projectile6, startPoint.position, Quaternion.identity) as Transform; 
+			obj.rigidbody.AddForce (powerX, 0.3f * powerY, powerZ * -1);
+		}
+		else if (matKind == 7) 
+		{
+			Transform obj = Instantiate (projectile7, startPoint.position, Quaternion.identity) as Transform; 
+			obj.rigidbody.AddForce (powerX, 0.3f * powerY, powerZ * -1);
+		}
+		else if (matKind == 8) 
+		{
+			Transform obj = Instantiate (projectile8, startPoint.position, Quaternion.identity) as Transform; 
 			obj.rigidbody.AddForce (powerX, 0.3f * powerY, powerZ * -1);
 		}
 
