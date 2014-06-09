@@ -3,7 +3,7 @@ using System.Collections;
 
 public class HandController : MonoBehaviour 
 {
-	private const float JOINT_POSITION_MULTIPLIER = 10.0f;
+	private const float JOINT_POSITION_MULTIPLIER = 8.0f;
 
 	public Transform centerPoint;
 

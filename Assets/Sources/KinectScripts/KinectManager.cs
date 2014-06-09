@@ -10,9 +10,12 @@ using System.Text;
 
 public class KinectManager : MonoBehaviour
 {
+	private const string DEFAULT_CALIBRATION_TEXT = "";
+
+
 	public enum Smoothing : int { None, Default, Medium, Aggressive }
 	
-	
+
 	// Public Bool to determine how many players there are. Default of one user.
 	public bool TwoUsers = false;
 	
@@ -1015,11 +1018,11 @@ public class KinectManager : MonoBehaviour
 		// GUI Text.
 		if(CalibrationText != null)
 		{
-			CalibrationText.guiText.text = "WAITING FOR USERS";
+			CalibrationText.guiText.text = DEFAULT_CALIBRATION_TEXT;
 		}
 		
 		Debug.Log("Waiting for users.");
-			
+
 		KinectInitialized = true;
 	}
 	
@@ -1505,7 +1508,7 @@ public class KinectManager : MonoBehaviour
 
 		if(CalibrationText != null)
 		{
-			CalibrationText.guiText.text = "WAITING FOR USERS";
+			CalibrationText.guiText.text = DEFAULT_CALIBRATION_TEXT;
 		}
 	}
 	
