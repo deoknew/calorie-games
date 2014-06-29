@@ -4,10 +4,15 @@ using System.Collections;
 public class GameManager : MonoBehaviour 
 {
 	enum GameState {
-		IDLE, PAUSE, RUNNING
+		IDLE, PAUSE, RUNNING, RESULT,
 	}
+	
+	public GameObject gameUILayer;
+	public GameObject resultUILayer;
+	public GameObject pauseUILayer;
 
-	public GUIText pauseDisplayText;
+	public GUITexture menuCursor;
+	public GUIText calorieText;
 	
 	private static GameManager instance;
 
@@ -33,6 +38,11 @@ public class GameManager : MonoBehaviour
 		return (currentState == GameState.PAUSE);
 	}
 
+	public bool isGameResult()
+	{
+		return (currentState == GameState.RESULT);
+	}
+
 
 	public void addCalorie(int calorie)
 	{
@@ -51,12 +61,15 @@ public class GameManager : MonoBehaviour
 	{
 		init();
 		startGame();
+
+		checkKinectCalibration();
 	}
 
 
 	void Update () 
 	{
 		checkKinectCalibration();
+		updateCalorieText();
 	}
 
 
@@ -74,27 +87,79 @@ public class GameManager : MonoBehaviour
 
 	void startGame()
 	{
-		pauseDisplayText.enabled = false;
 		currentState = GameState.RUNNING;
 		Time.timeScale = 1;
+		RenderSettings.ambientLight = Color.white;
+
+		updateUI();
 	}
 
 
 	void pauseGame()
 	{
-		pauseDisplayText.enabled = true;
 		currentState = GameState.PAUSE;
 		Time.timeScale = 0;
+		RenderSettings.ambientLight = Color.gray;
+
+		updateUI();
 	}
 
 
 	void resumeGame()
 	{
 		if (currentState == GameState.PAUSE) {
-			pauseDisplayText.enabled = false;
 			currentState = GameState.RUNNING;
 			Time.timeScale = 1;
+			RenderSettings.ambientLight = Color.white;
 		}
+
+		updateUI();
+	}
+
+
+	void restartGame()
+	{
+		//TODO:
+	}
+
+
+	void showGameResult()
+	{
+		RenderSettings.ambientLight = Color.black;
+
+		//TODO:
+	}
+
+
+	void updateUI()
+	{
+		gameUILayer.SetActive(false);
+		resultUILayer.SetActive(false);
+		pauseUILayer.SetActive(false);
+
+		switch (currentState) {
+		case GameState.PAUSE:
+			pauseUILayer.SetActive(true);
+			menuCursor.enabled = false;
+			break;
+
+		case GameState.RUNNING:
+			gameUILayer.SetActive(true);
+			menuCursor.enabled = false;
+			break;
+
+		case GameState.RESULT:
+			resultUILayer.SetActive(true);
+			menuCursor.enabled = true;
+			break;
+		}
+	}
+
+
+	void updateCalorieText()
+	{
+		if (calorieText != null)
+			calorieText.text = currentCalorie.ToString();	
 	}
 
 

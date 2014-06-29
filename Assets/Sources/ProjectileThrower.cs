@@ -3,9 +3,8 @@ using System.Collections;
 
 public class ProjectileThrower : MonoBehaviour 
 {
-	private const string THROWING_POINT_NAME = "Throwing_Point";
-
-	public GameManager gameManager;
+	private const string THROWING_POINT_NAME = "Point_Thrower";
+	
 	public Transform[] projectiles;
 	public AudioClip throwAudio;
 
@@ -25,13 +24,12 @@ public class ProjectileThrower : MonoBehaviour
 	void Start () 
 	{
 		startPoint = GameObject.Find (THROWING_POINT_NAME).transform;
-		gameManager = GameManager.getInstance();
 	}
 
 
 	void Update ()
 	{
-		if (!GameManager.getInstance().isGameRunning())
+		if (false == GameManager.getInstance().isGameRunning())
 			return;
 		
 		//matKind = (int)Random.Range (1, 9);
