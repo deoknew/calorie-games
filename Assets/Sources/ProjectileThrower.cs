@@ -12,9 +12,9 @@ public class ProjectileThrower : MonoBehaviour
 	//public Transform projectile1, projectile2, projectile3, projectile4, projectile5;
 	//public Transform projectile6, projectile7, projectile8;
 
-	public int powerX;
+	//public int powerX;
 	public int powerY;
-	public int powerZ;
+	//public int powerZ;
 
 	//public int matKind;
 	public float throwRate;
@@ -33,9 +33,7 @@ public class ProjectileThrower : MonoBehaviour
 	{
 		if (!GameManager.getInstance().isGameRunning())
 			return;
-
-		powerZ = Random.Range (2850, 3200);
-		powerX = Random.Range (-450, 450);
+		
 		//matKind = (int)Random.Range (1, 9);
 		if (Random.Range (0, 1000) < (int)(throwRate * 100.0f))
 			FireBullet ();
@@ -46,6 +44,9 @@ public class ProjectileThrower : MonoBehaviour
     {
 		const int MIN_TORQUE = 0;
 		const int MAX_TORQUE = 8;
+
+		int powerZ = Random.Range (2850, 3200);
+		int powerX = Random.Range (-420, 420);
 
 		int index = (int)Random.Range(0, projectiles.Length-1);
 
