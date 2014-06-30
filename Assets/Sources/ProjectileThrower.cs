@@ -33,7 +33,7 @@ public class ProjectileThrower : MonoBehaviour
 			return;
 		
 		//matKind = (int)Random.Range (1, 9);
-		if (Random.Range (0, 1000) < (int)(throwRate * 100.0f))
+		if (Random.Range (0, 1000) < (int)(throwRate * 30.0f))
 			FireBullet ();
 	}
 
@@ -43,10 +43,11 @@ public class ProjectileThrower : MonoBehaviour
 		const int MIN_TORQUE = 0;
 		const int MAX_TORQUE = 8;
 
-		int powerZ = Random.Range (2850, 3200);
+		int powerZ = Random.Range (2600, 3100);
 		int powerX = Random.Range (-420, 420);
 
 		int index = (int)Random.Range(0, projectiles.Length-1);
+
 
 		Vector3 forceVector = new Vector3(powerX, 0.3f * powerY, powerZ * -1);
 		Vector3 torqueVector = new Vector3();
