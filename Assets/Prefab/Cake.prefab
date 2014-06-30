@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: .443720311, z: 0, w: .896165371}
   m_LocalPosition: {x: .204112098, y: 0, z: .269584954}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
 --- !u!23 &2300000
@@ -101,7 +101,6 @@ MonoBehaviour:
   consumeAudio: {fileID: 8300000, guid: 32e9cd68366245043ae7cafddb2b8aec, type: 3}
   consumeParticle: {fileID: 400000, guid: 9c5bd6070cd5d481abdb8755ff51fd7a, type: 2}
   calorie: 235
-  index: 2
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

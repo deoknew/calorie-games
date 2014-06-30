@@ -2,8 +2,7 @@ fileFormatVersion: 2
 guid: adb396309482ad44380cc1fcfad0fb3a
 MonoImporter:
   serializedVersion: 2
-  defaultReferences:
-  - throwAudio: {fileID: 8300000, guid: 0f03f37637815ad48a4427302d8ebf02, type: 3}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

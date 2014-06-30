@@ -13,12 +13,7 @@ public class GameManager : MonoBehaviour
 
 	public GUITexture menuCursor;
 	public GUIText calorieText;
-	public GUIText MaterialCalorie;
-
-	public Transform[] projectiles;
-	private Transform ImageLocation;
-	public GUITexture ImagePanel;
-
+	
 	private static GameManager instance;
 
 	public static GameManager getInstance() {
@@ -29,7 +24,6 @@ public class GameManager : MonoBehaviour
 	private int currentCalorie;
 	public int CurrentCalorie {
 		get { return currentCalorie; }
-
 	}
 	
 	private GameState currentState;
@@ -48,23 +42,13 @@ public class GameManager : MonoBehaviour
 	{
 		return (currentState == GameState.RESULT);
 	}
-	public void showImage(int index)
-	{   
 
-		Transform obj = Instantiate (projectiles[index-1], ImageLocation.position, Quaternion.identity) as Transform; 
-		Destroy (obj.gameObject, 3);
-
-	}
 
 	public void addCalorie(int calorie)
 	{
 		currentCalorie += calorie;
 	}
-	public void showCalorie(int calorie)
-	{
-		if(MaterialCalorie!=null)
-		MaterialCalorie.text =calorie.ToString();
-	}
+
 
 	void init()
 	{
@@ -79,7 +63,6 @@ public class GameManager : MonoBehaviour
 		startGame();
 
 		checkKinectCalibration();
-		ImageLocation = GameObject.Find ("ImageLocation").transform;
 	}
 
 
@@ -92,10 +75,6 @@ public class GameManager : MonoBehaviour
 
 	void checkKinectCalibration()
 	{
-		KinectManager kinectManager = KinectManager.Instance;
-		if (kinectManager == null)
-			return;
-
 		bool isUserDetected = KinectManager.Instance.IsUserDetected();
 
 		if (isUserDetected) {

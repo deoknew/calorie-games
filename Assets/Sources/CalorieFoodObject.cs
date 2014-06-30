@@ -6,21 +6,12 @@ public class CalorieFoodObject : MonoBehaviour
 	public AudioClip consumeAudio;
 	public Transform consumeParticle;
 	public int calorie;
-	public int index;
-	//public Transform Material;
-	//public UILabel AddedCalorieText;
+
+
 	void Update() 
 	{
-		if (transform.position.y <= 3) 
-		{				
-			Destroy (gameObject);
-
-
-			//AddedCalorieText.text=GameManager.getInstance().CurrentCalorie.ToString();
-			//Instantiate(AddedCalorieText, new Vector3(transform.position.x, 1.2f, transform.position.z + 0.2f), Quaternion.identity);
-		}
-		if(transform.position.y <= 3)
-			consumeFood ();
+		if (transform.position.y <= 0)
+			Destroy(gameObject);
 	}
 
 
@@ -32,23 +23,13 @@ public class CalorieFoodObject : MonoBehaviour
 			Destroy(obj.gameObject, 1);
 
 			AudioSource.PlayClipAtPoint(consumeAudio, transform.position, 1.0f);
-			showFoodCalorie();
-			showFoodImage();
 
-			//consumeFood();
+			consumeFood();
 		}
 		Destroy (gameObject);
 	}
-	void showFoodImage()
-	{
-		GameManager.getInstance ().showImage (index);
 
-	}
-	void showFoodCalorie()
-	{
-		GameManager.getInstance ().showCalorie (calorie);
 
-	}
 	void consumeFood()
 	{
 		GameManager.getInstance().addCalorie(calorie);
