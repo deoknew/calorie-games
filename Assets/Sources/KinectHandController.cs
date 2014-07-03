@@ -17,6 +17,9 @@ public class KinectHandController : MonoBehaviour
 
 		uint playerID = KinectManager.Instance != null ? KinectManager.Instance.GetPlayer1ID() : 0;
 
+		if (false == _kinectManager.IsPlayerCalibrated(playerID))
+			return;
+
 		Vector3 leftHandPos = _kinectManager.GetJointPosition(playerID, (int)KinectWrapper.NuiSkeletonPositionIndex.WristLeft);
 		Vector3 rightHandPos = _kinectManager.GetJointPosition(playerID, (int)KinectWrapper.NuiSkeletonPositionIndex.WristRight);
 

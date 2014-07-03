@@ -13,7 +13,16 @@ public class GameManager : MonoBehaviour
 
 	public GUITexture menuCursor;
 	public GUIText calorieText;
-	
+	public GUIText MaterialCalorie;
+	public GUIText textHit;  //물체 충돌시 물체 위치에 바로 표시되는 칼로리량 
+
+	public Transform[] projectiles;
+	private Transform ImageLocation;
+	public GUITexture ImagePanel;
+	public Transform text_Hit;
+	private bool isCreated = false;
+	private Transform obj;
+
 	private static GameManager instance;
 
 	public static GameManager getInstance() {
@@ -24,6 +33,7 @@ public class GameManager : MonoBehaviour
 	private int currentCalorie;
 	public int CurrentCalorie {
 		get { return currentCalorie; }
+
 	}
 	
 	private GameState currentState;
@@ -42,13 +52,35 @@ public class GameManager : MonoBehaviour
 	{
 		return (currentState == GameState.RESULT);
 	}
+	public void showImage(int index)
+	{   
+		if(isCreated==true)
+			Destroy (obj.gameObject);
 
+		obj = Instantiate (projectiles[index-1], ImageLocation.position, Quaternion.identity) as Transform; 
+		isCreated = true;
+
+	}
+	public void showText(Transform transform,int calorie)
+	{
+		//text_Hit.transform.guiText.text=calorie.ToString ();
+
+		//textHit.text = calorie.ToString ();
+		//Transform text=(Transform) Instantiate(textHit.transform, transform.position, Quaternion.identity);
+		Transform text=(Transform) Instantiate(text_Hit, transform.position, Quaternion.identity);
+		Destroy (text.gameObject, 0.5f);
+
+	}
 
 	public void addCalorie(int calorie)
 	{
 		currentCalorie += calorie;
 	}
-
+	public void showCalorie(int calorie)
+	{
+		if(MaterialCalorie!=null)
+		MaterialCalorie.text =calorie.ToString();
+	}
 
 	void init()
 	{
@@ -63,6 +95,7 @@ public class GameManager : MonoBehaviour
 		startGame();
 
 		checkKinectCalibration();
+		ImageLocation = GameObject.Find ("ImageLocation").transform;
 	}
 
 
@@ -75,6 +108,10 @@ public class GameManager : MonoBehaviour
 
 	void checkKinectCalibration()
 	{
+		KinectManager kinectManager = KinectManager.Instance;
+		if (kinectManager == null)
+			return;
+
 		bool isUserDetected = KinectManager.Instance.IsUserDetected();
 
 		if (isUserDetected) {
@@ -99,7 +136,7 @@ public class GameManager : MonoBehaviour
 	{
 		currentState = GameState.PAUSE;
 		Time.timeScale = 0;
-		RenderSettings.ambientLight = Color.gray;
+		RenderSettings.ambientLight = Color.black;
 
 		updateUI();
 	}
