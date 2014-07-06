@@ -16,6 +16,10 @@ public class GameManager : MonoBehaviour
 	public GUIText MaterialCalorie;
 	public GUIText textHit;  //물체 충돌시 물체 위치에 바로 표시되는 칼로리량 
 
+	public GUIText timer;
+	float time,mseconds=0.0f;
+	int minute=0,seconds=0;
+
 	public Transform[] projectiles;
 	private Transform ImageLocation;
 	public GUITexture ImagePanel;
@@ -101,8 +105,31 @@ public class GameManager : MonoBehaviour
 
 	void Update () 
 	{
+		timerUI ();
 		checkKinectCalibration();
 		updateCalorieText();
+
+		if (currentCalorie >= 3000) 
+						finishGame ();
+				
+
+	}
+	void timerUI()
+	{
+		time += Time.deltaTime;
+		seconds = (int)time;
+		mseconds = time - seconds;
+		if (time >= 60) 
+		{			
+			minute += 1;
+			time = 0;
+		}
+		timer.text =minute+":"+seconds;
+		//timer.text =string.Format("{00:00}",minute,seconds);
+		
+		//time = Time.fixedTime;
+		//timer.text = Time.fixedTime.ToString();
+		//timer.text=string.Format("{0:##:(.)##}", time);
 	}
 
 
@@ -166,7 +193,13 @@ public class GameManager : MonoBehaviour
 
 		//TODO:
 	}
-
+	void finishGame()
+	{
+		RenderSettings.ambientLight = Color.black;
+		
+		currentState = GameState.RESULT;
+		updateUI ();
+	}
 
 	void updateUI()
 	{
