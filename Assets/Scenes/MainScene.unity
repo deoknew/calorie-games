@@ -565,6 +565,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1689107976}
   - 131: {fileID: 1689107975}
+  - 114: {fileID: 1689107977}
   m_Layer: 0
   m_Name: Texture_Quit_Button
   m_TagString: Untagged
@@ -603,3 +604,14 @@ Transform:
   m_Children:
   - {fileID: 340363619}
   m_Father: {fileID: 0}
+--- !u!114 &1689107977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1689107974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 248dcc20492f15f42b2d1de634f9e1a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

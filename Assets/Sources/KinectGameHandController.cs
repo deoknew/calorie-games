@@ -11,9 +11,21 @@ public class KinectGameHandController : KinectHandController
 	public Transform rightHand;
 
 
-	public override void UpdateHand(Vector3 leftHandPos, Vector3 rightHandPos)
+	void Update()
 	{
-		if (false == GameManager.getInstance().isGameRunning())
+		if (false == isPlayerCalibrated()) {
+			setVisibleGameHands(false);
+		}
+	}
+
+
+	public override void onUpdateHand(Vector3 leftHandPos, Vector3 rightHandPos)
+	{
+		bool gameRunning = GameManager.getInstance().isGameRunning();
+
+		setVisibleGameHands(gameRunning);
+
+		if (false == gameRunning)
 			return;
 
 		leftHandPos.z *= -1;
@@ -40,5 +52,12 @@ public class KinectGameHandController : KinectHandController
 		if (rightHand != null) {
 			rightHand.position = rightHandPos;
 		}
+	}
+
+
+	private void setVisibleGameHands(bool visible)
+	{
+		leftHand.gameObject.SetActive(visible);
+		rightHand.gameObject.SetActive(visible);
 	}
 }

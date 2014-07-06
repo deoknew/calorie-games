@@ -7,19 +7,19 @@ public class CalorieFoodObject : MonoBehaviour
 	public Transform consumeParticle;
 
 	public int calorie;
-	public int index;
+	public int foodId;
+
 	//public Transform Material;
 	//public UILabel AddedCalorieText;
+
+
 	void Update() 
 	{
-		if (transform.position.y <= 3) 
-		{				
+		if (transform.position.y <= 3 || GameManager.getInstance().isGameFinished())
+		{
 			Destroy (gameObject);
-
-
-			//AddedCalorieText.text=GameManager.getInstance().CurrentCalorie.ToString();
-			//Instantiate(AddedCalorieText, new Vector3(transform.position.x, 1.2f, transform.position.z + 0.2f), Quaternion.identity);
 		}
+
 		if(transform.position.y <= 3)
 			consumeFood ();
 	}
@@ -41,20 +41,27 @@ public class CalorieFoodObject : MonoBehaviour
 		}
 		Destroy (gameObject);
 	}
+
+
 	void show_Text(Transform tr)
 	{
 		GameManager.getInstance ().showText (tr,calorie);
 	}
+
+
 	void showFoodImage()
 	{
-		GameManager.getInstance ().showImage (index);
-
+		GameManager.getInstance ().showFoodImage (foodId);
 	}
+
+
 	void showFoodCalorie()
 	{
 		GameManager.getInstance ().showCalorie (calorie);
 
 	}
+
+
 	void consumeFood()
 	{
 		GameManager.getInstance().addCalorie(calorie);

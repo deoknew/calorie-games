@@ -4,7 +4,12 @@ using System.Collections;
 public class GameManager : MonoBehaviour 
 {
 	enum GameState {
-		IDLE, PAUSE, RUNNING, RESULT,
+		IDLE, 
+		OPENING, 
+		PAUSE, 
+		RUNNING, 
+		ENDING, 
+		RESULT,
 	}
 	
 	public GameObject gameUILayer;
@@ -17,15 +22,15 @@ public class GameManager : MonoBehaviour
 	public GUIText textHit;  //물체 충돌시 물체 위치에 바로 표시되는 칼로리량 
 
 	public GUIText timer;
+
+	public Transform[] projectiles;
+	public GUITexture ImagePanel;
+	public Transform text_Hit;
+
 	float time,mseconds=0.0f;
 	int minute=0,seconds=0;
 
-	public Transform[] projectiles;
-	private Transform ImageLocation;
-	public GUITexture ImagePanel;
-	public Transform text_Hit;
-	private bool isCreated = false;
-	private Transform obj;
+	private GameObject _foodImageObject;
 
 	private static GameManager instance;
 
@@ -42,29 +47,49 @@ public class GameManager : MonoBehaviour
 	
 	private GameState currentState;
 
+
 	public bool isGameRunning()
 	{
 		return (currentState == GameState.RUNNING);
 	}
+
 
 	public bool isGamePause()
 	{
 		return (currentState == GameState.PAUSE);
 	}
 
+
+	public bool isGameFinished()
+	{
+		return (currentState == GameState.ENDING) || (currentState == GameState.RESULT);
+	}
+
+
 	public bool isGameResult()
 	{
 		return (currentState == GameState.RESULT);
 	}
-	public void showImage(int index)
-	{   
-		if(isCreated==true)
-			Destroy (obj.gameObject);
 
-		obj = Instantiate (projectiles[index-1], ImageLocation.position, Quaternion.identity) as Transform; 
-		isCreated = true;
 
+	public void showFoodImage(int foodId)
+	{
+		if (_foodImageObject != null)
+			Destroy (_foodImageObject);
+
+		GameObject foodObject = (GameObject)findFoodObject(foodId);
+
+		if (foodObject != null) {
+			Transform imageLocation = GameObject.Find ("ImageLocation").transform;
+
+			_foodImageObject = (GameObject)Instantiate (foodObject, imageLocation.position, Quaternion.identity);
+			_foodImageObject.rigidbody.useGravity = false;
+
+			_foodImageObject.transform.parent = gameUILayer.transform;
+		}
 	}
+
+	
 	public void showText(Transform transform,int calorie)
 	{
 		//text_Hit.transform.guiText.text=calorie.ToString ();
@@ -76,44 +101,80 @@ public class GameManager : MonoBehaviour
 
 	}
 
+
 	public void addCalorie(int calorie)
 	{
 		currentCalorie += calorie;
 	}
+
+
 	public void showCalorie(int calorie)
 	{
-		if(MaterialCalorie!=null)
-		MaterialCalorie.text =calorie.ToString();
+		if (MaterialCalorie != null)
+			MaterialCalorie.text = calorie.ToString();
 	}
+
+
+	public void restart()
+	{
+		restartGame();
+	}
+
+
+	private GameObject findFoodObject(int foodId)
+	{
+		for (int i = 0; i < projectiles.Length; ++i) {
+			CalorieFoodObject currentObject = projectiles[i].GetComponent<CalorieFoodObject>();
+
+			if (currentObject.foodId == foodId) {
+				return projectiles[i].gameObject;
+			}
+		}
+		return null;
+	}
+
 
 	void init()
 	{
 		instance = this;
-		currentState = GameState.IDLE;
 	}
 
+	
+	void initGameData()
+	{
+		currentCalorie = 0;
+		
+		time = 0;
+		mseconds = 0;
+		minute = 0;
+		seconds = 0;
+	}
 
+	
 	void Start () 
 	{
 		init();
+
+		prepareGame();
 		startGame();
 
 		checkKinectCalibration();
-		ImageLocation = GameObject.Find ("ImageLocation").transform;
 	}
 
 
-	void Update () 
+	void Update ()
 	{
-		timerUI ();
-		checkKinectCalibration();
-		updateCalorieText();
-
-		if (currentCalorie >= 3000) 
-						finishGame ();
-				
-
+		if (currentState == GameState.RUNNING) {
+			timerUI ();
+			updateCalorieText();
+			
+			if (currentCalorie >= 3000) {
+				finishGame ();
+			}
+		}
 	}
+
+
 	void timerUI()
 	{
 		time += Time.deltaTime;
@@ -135,89 +196,205 @@ public class GameManager : MonoBehaviour
 
 	void checkKinectCalibration()
 	{
-		KinectManager kinectManager = KinectManager.Instance;
-		if (kinectManager == null)
-			return;
+		if (currentState == GameState.RUNNING || currentState == GameState.RESULT) {
+			KinectManager kinectManager = KinectManager.Instance;
+			if (kinectManager == null)
+				return;
+			
+			bool isUserDetected = KinectManager.Instance.IsUserDetected();
 
-		bool isUserDetected = KinectManager.Instance.IsUserDetected();
-
-		if (isUserDetected) {
-			resumeGame();
-		} else {
-			pauseGame();
+			if (isUserDetected) {
+				resumeGame();
+			} else {
+				pauseGame();
+			}
 		}
+	}
+
+
+	void prepareGame()
+	{
+		updateState(GameState.IDLE);
 	}
 
 
 	void startGame()
 	{
-		currentState = GameState.RUNNING;
-		Time.timeScale = 1;
-		RenderSettings.ambientLight = Color.white;
-
-		updateUI();
+		updateState(GameState.OPENING);
 	}
 
 
 	void pauseGame()
 	{
-		currentState = GameState.PAUSE;
-		Time.timeScale = 0;
-		RenderSettings.ambientLight = Color.black;
-
-		updateUI();
+		updateState(GameState.PAUSE);
 	}
 
 
 	void resumeGame()
 	{
-		if (currentState == GameState.PAUSE) {
-			currentState = GameState.RUNNING;
-			Time.timeScale = 1;
-			RenderSettings.ambientLight = Color.white;
-		}
+		updateState(GameState.RUNNING);
+	}
 
-		updateUI();
+	
+	void finishGame()
+	{
+		updateState(GameState.ENDING);
 	}
 
 
 	void restartGame()
 	{
-		//TODO:
+		prepareGame();
+		startGame();
 	}
 
 
-	void showGameResult()
+	IEnumerator runOpeningAction(int actionIndex)
 	{
-		RenderSettings.ambientLight = Color.black;
+		float delay = 1.0f;
+		bool finished = false;
 
-		//TODO:
+		switch (actionIndex) {
+		case 0:
+			break;
+
+		case 1:
+			finished = true;
+			break;
+		}
+
+		if (finished) {
+			onOpeningFinished();
+			yield break;
+		}
+
+		else {
+			yield return new WaitForSeconds(delay);
+			StartCoroutine("runOpeningAction", ++actionIndex);
+		}
 	}
-	void finishGame()
+
+
+	IEnumerator runEndingAction(int actionIndex)
 	{
-		RenderSettings.ambientLight = Color.black;
+		float delay = 1.0f;
+		bool finished = false;
 		
-		currentState = GameState.RESULT;
-		updateUI ();
+		switch (actionIndex) {
+		case 0:
+			break;
+			
+		case 1:
+			finished = true;
+			break;
+		}
+		
+		if (finished) {
+			onEndingFinished();
+			yield break;
+		}
+		
+		else {
+			yield return new WaitForSeconds(delay);
+			StartCoroutine("runEndingAction", ++actionIndex);
+		}
 	}
 
-	void updateUI()
+
+	private void playOpening()
+	{
+		int actionIndex = 0;
+		StartCoroutine("runOpeningAction", actionIndex);
+	}
+
+
+	private void playEnding()
+	{
+		int actionIndex = 0;
+		StartCoroutine("runEndingAction", actionIndex);
+	}
+	
+
+	private void onOpeningFinished()
+	{
+		updateState(GameState.RUNNING);
+	}
+
+
+	private void onEndingFinished()
+	{
+		updateState(GameState.RESULT);
+	}
+	
+
+	void updateState(GameState nextState)
+	{
+		switch (nextState) {
+		case GameState.IDLE:
+			initGameData();
+			break;
+
+		case GameState.OPENING:
+			if (currentState != GameState.IDLE)
+				return;
+
+			playOpening();
+			break;
+
+		case GameState.RUNNING:
+			if (currentState == GameState.PAUSE) {
+				Time.timeScale = 1;
+			}
+
+			RenderSettings.ambientLight = Color.white;
+			break;
+
+		case GameState.PAUSE:
+			Time.timeScale = 0;
+			RenderSettings.ambientLight = Color.black;
+			break;
+
+		case GameState.ENDING:
+			playEnding();
+			break;
+			
+		case GameState.RESULT:
+			RenderSettings.ambientLight = Color.black;
+			break;
+		}
+		updateUI(nextState);
+
+		currentState = nextState;
+	}
+
+
+	void updateUI(GameState nextState)
 	{
 		gameUILayer.SetActive(false);
 		resultUILayer.SetActive(false);
 		pauseUILayer.SetActive(false);
 
-		switch (currentState) {
+		switch (nextState) {
+		case GameState.OPENING:
+		case GameState.ENDING:
+			break;
+
+		case GameState.IDLE:
+			if (_foodImageObject != null) {
+				DestroyObject(_foodImageObject);
+			}
+			break;
+
 		case GameState.PAUSE:
 			pauseUILayer.SetActive(true);
 			menuCursor.enabled = false;
 			break;
-
+		
 		case GameState.RUNNING:
 			gameUILayer.SetActive(true);
 			menuCursor.enabled = false;
 			break;
-
+		
 		case GameState.RESULT:
 			resultUILayer.SetActive(true);
 			menuCursor.enabled = true;
