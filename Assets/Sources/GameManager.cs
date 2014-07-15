@@ -21,13 +21,17 @@ public class GameManager : MonoBehaviour
 	public GUIText MaterialCalorie;
 	public GUIText textHit;  //물체 충돌시 물체 위치에 바로 표시되는 칼로리량 
 
-	public GUIText timer;
+	public GUIText timer;  //타이머 텍스트 
+
+	public int[] foodIdArray;  //발사할 음식 인덱스 배열 
 
 	public Transform[] projectiles;
 	public GUITexture ImagePanel;
 	public Transform text_Hit;
 
-	float time,mseconds=0.0f;
+
+	float mseconds=0.0f;
+	float time=0.0f;
 	int minute=0,seconds=0;
 
 	private GameObject _foodImageObject;
@@ -100,7 +104,36 @@ public class GameManager : MonoBehaviour
 		Destroy (text.gameObject, 0.5f);
 
 	}
+	public void foodIdArrayCreate()
+	{
 
+		foodIdArray = new int[150];
+		bool reverse = false;
+		int j = (int)Random.Range(0,10);
+		for (int i=0; i< 150; i++) {
+			if(j>10)
+			{
+				reverse=true;
+				j=j-2;
+			}
+			if(j<0)
+			{
+				reverse=false;
+				j=j+2;
+			}
+			if(reverse==false)
+			{
+				foodIdArray[i]=j;
+				j++;
+			}
+			else
+			{
+				foodIdArray[i]=j;
+				j--;
+			}
+
+		}
+	}
 
 	public void addCalorie(int calorie)
 	{
@@ -156,9 +189,12 @@ public class GameManager : MonoBehaviour
 		init();
 
 		prepareGame();
+		foodIdArrayCreate();
 		startGame();
 
-		checkKinectCalibration();
+		//checkKinectCalibration();   //******* 임시 수정 *******
+		resumeGame ();
+
 	}
 
 
@@ -167,32 +203,29 @@ public class GameManager : MonoBehaviour
 		if (currentState == GameState.RUNNING) {
 			timerUI ();
 			updateCalorieText();
-			
-			if (currentCalorie >= 3000) {
+			if(time>=10)
+			{	timer.color=Color.red;
+				timer.fontSize=34;
+
+			}
+			if (currentCalorie >= 3000 || time>=60) {
 				finishGame ();
 			}
 		}
 	}
-
-
+	
 	void timerUI()
 	{
 		time += Time.deltaTime;
-		seconds = (int)time;
-		mseconds = time - seconds;
-		if (time >= 60) 
-		{			
-			minute += 1;
-			time = 0;
-		}
-		timer.text =minute+":"+seconds;
-		//timer.text =string.Format("{00:00}",minute,seconds);
-		
-		//time = Time.fixedTime;
-		//timer.text = Time.fixedTime.ToString();
-		//timer.text=string.Format("{0:##:(.)##}", time);
-	}
+		string timeStr;
+		timeStr = "" + time.ToString ("00.00");
+		timeStr = timeStr.Replace (".", ":");
+		timer.text = timeStr;
 
+
+
+
+	}
 
 	void checkKinectCalibration()
 	{
@@ -221,6 +254,7 @@ public class GameManager : MonoBehaviour
 	void startGame()
 	{
 		updateState(GameState.OPENING);
+
 	}
 
 
@@ -233,6 +267,7 @@ public class GameManager : MonoBehaviour
 	void resumeGame()
 	{
 		updateState(GameState.RUNNING);
+
 	}
 
 	

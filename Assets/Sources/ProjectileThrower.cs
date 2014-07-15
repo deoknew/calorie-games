@@ -11,12 +11,26 @@ public class ProjectileThrower : MonoBehaviour
 
 	private Transform startPoint;
 
-
-	void Start () 
+	public float waitTime=0.4f;
+	public int [] fireArray;
+	public int k = 0;
+	IEnumerator Start()
 	{
+
 		startPoint = GameObject.Find (THROWING_POINT_NAME).transform;
+
+		do{
+			yield return new WaitForSeconds(waitTime);
+			FireBullet ();
+		}while (GameManager.getInstance().isGameRunning()==true);
 	}
 
+	/*void Start () 
+	{
+
+
+	}
+	/*
 
 	void Update ()
 	{
@@ -24,23 +38,25 @@ public class ProjectileThrower : MonoBehaviour
 			return;
 		
 		//matKind = (int)Random.Range (1, 9);
-		if (Random.Range (0, 1000) < (int)(throwRate * 30.0f))
-			FireBullet ();
+		//if (Random.Range (0, 1000) < (int)(throwRate * 30.0f))
+			//FireBullet ();
 	}
-
+*/
 
     void FireBullet()
     {
+		fireArray = GameManager.getInstance ().foodIdArray; 
 		Transform[] projectiles = GameManager.getInstance().projectiles;
 
 		const int MIN_TORQUE = 0;
 		const int MAX_TORQUE = 8;
 
 		int powerZ = Random.Range (2600, 3100);
-		int powerX = Random.Range (-420, 420);
+		int powerX = Random.Range (-550, 550);
 
-		int index = (int)Random.Range(0, projectiles.Length-1);
-
+		//int index = (int)Random.Range(0, projectiles.Length-1);
+		int index = fireArray[k];
+		Debug.Log (index);
 		Vector3 forceVector = new Vector3(powerX, 0.3f * powerY, powerZ * -1);
 		Vector3 torqueVector = new Vector3();
 		for (int i = 0; i < 3; ++i)
@@ -52,5 +68,7 @@ public class ProjectileThrower : MonoBehaviour
 		obj.rigidbody.AddTorque (torqueVector);
 
 		AudioSource.PlayClipAtPoint(throwAudio, startPoint.position, 1.0f);
+
+		k++;
 	}
 }
