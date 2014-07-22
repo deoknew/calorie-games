@@ -27,15 +27,14 @@ public class GameManager : MonoBehaviour
 	public GUIText timer;  //타이머 텍스트 
 
 	public int[] foodIdArray;  //발사할 음식 인덱스 배열 
+	public int [] NumberOfCollision;
 
 	public Transform[] projectiles;
 	public GUITexture ImagePanel;
 	public Transform text_Hit;
 
+	float time;
 
-	float mseconds=0.0f;
-	float time=0.0f;
-	int minute=0,seconds=0;
 
 	private GameObject _foodImageObject;
 
@@ -164,7 +163,27 @@ public class GameManager : MonoBehaviour
 		if (MaterialCalorie != null)
 			MaterialCalorie.text = calorie.ToString();
 	}
+	public void CheckFoodCrash(int FoodID)
+	{
+		NumberOfCollision [FoodID] += 1;
 
+	}
+	/*int getMostCollisionFood()
+	{
+		int max;
+		int maxNum;
+		max=NumberOfCollision[0];
+		for(int i=0; i<10;)
+		{
+			i++;
+			if(max < NumberOfCollision[i])
+			{
+				max=NumberOfCollision[i];
+				maxNum=i;
+			}
+		}
+		return maxNum;
+	}*/
 
 	public void restart()
 	{
@@ -196,17 +215,23 @@ public class GameManager : MonoBehaviour
 	/// </summary>
 	void initGameData()
 	{
+		NumberOfCollision = new int[projectiles.Length];
+		for (int i=0; i<projectiles.Length; i++) 
+			NumberOfCollision[i]=0;
+
 		currentCalorie = 0;
 		
-		time = 0;
-		mseconds = 0;
-		minute = 0;
-		seconds = 0;
+		time = 0.0f;
+		
+		ProjectileThrower.getInstance ().InitK();
+		timer.color = Color.white;
+		timer.fontSize = 32;
 	}
 
 	
 	void Start () 
 	{
+	
 		init();
 
 		prepareGame();
@@ -224,7 +249,7 @@ public class GameManager : MonoBehaviour
 		if (currentState == GameState.RUNNING) {
 			timerUI ();
 			updateCalorieText();
-			if(time>=10)
+			if(time<=10)
 			{	timer.color=Color.red;
 				timer.fontSize=34;
 
@@ -240,16 +265,6 @@ public class GameManager : MonoBehaviour
 	{
 		instance = null;
 	}
-
-
-	void Init()
-	{
-		ProjectileThrower.getInstance ().InitK();
-		timer.color = Color.white;
-		timer.fontSize = 32;
-	}
-
-
 	void timerUI()
 	{
 		time += Time.deltaTime;
@@ -289,7 +304,6 @@ public class GameManager : MonoBehaviour
 
 	void prepareGame()
 	{
-
 
 		updateState(GameState.IDLE);
 	}

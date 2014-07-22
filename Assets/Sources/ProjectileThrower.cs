@@ -23,7 +23,7 @@ public class ProjectileThrower : MonoBehaviour
 
 	IEnumerator Start()
 	{
-
+		instance = this;
 		startPoint = GameObject.Find (THROWING_POINT_NAME).transform;
 
 		while(true){

@@ -12,6 +12,18 @@ public class CalorieFoodObject : MonoBehaviour
 	//public Transform Material;
 	//public UILabel AddedCalorieText;
 
+	
+	private static CalorieFoodObject instance;
+	
+	public static CalorieFoodObject getInstance() {
+		return instance;
+	}
+	void Start()
+	{
+
+		instance = this;		
+	}
+
 
 	void Update() 
 	{
@@ -33,7 +45,7 @@ public class CalorieFoodObject : MonoBehaviour
 			showFoodCalorie();
 			showFoodImage();
 			show_Text (transform);
-
+			CollsionFoodID();
 			consumeFood();
 		}
 		Destroy (gameObject);
@@ -63,4 +75,11 @@ public class CalorieFoodObject : MonoBehaviour
 	{
 		GameManager.getInstance().addCalorie(calorie);
 	}
+	void CollsionFoodID()
+	{
+		GameManager.getInstance ().CheckFoodCrash (foodId);
+		Debug.Log (foodId);
+	}
+
+
 }
