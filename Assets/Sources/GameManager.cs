@@ -21,6 +21,9 @@ public class GameManager : MonoBehaviour
 	public GUIText MaterialCalorie;
 	public GUIText textHit;  //물체 충돌시 물체 위치에 바로 표시되는 칼로리량 
 
+	public GameModule runningModule;
+	public GameModule resultModule;
+
 	public GUIText timer;  //타이머 텍스트 
 
 	public int[] foodIdArray;  //발사할 음식 인덱스 배열 
@@ -43,11 +46,26 @@ public class GameManager : MonoBehaviour
 	}
 
 
+	private int currentMaxCombo;
+	public int CurrentMaxCombo {
+		get { return currentMaxCombo; }
+	}
+	
+	private int currentCombo;
+	public int CurrentCombo {
+		get { return currentCombo; }
+	}
+	
+	private int currentScore;
+	public int CurrentScore {
+		get { return currentScore; }
+	}
+	
 	private int currentCalorie;
 	public int CurrentCalorie {
 		get { return currentCalorie; }
-
 	}
+
 	
 	private GameState currentState;
 
@@ -172,7 +190,10 @@ public class GameManager : MonoBehaviour
 		instance = this;
 	}
 
-	
+
+	/// <summary>
+	/// 게임 데이터를 초기화한다.
+	/// </summary>
 	void initGameData()
 	{
 		currentCalorie = 0;
@@ -193,8 +214,6 @@ public class GameManager : MonoBehaviour
 		startGame();
 
 	    checkKinectCalibration();   
-
-
 	}
 
 
@@ -215,12 +234,22 @@ public class GameManager : MonoBehaviour
 			}
 		}
 	}
+
+
+	void OnDisable()
+	{
+		instance = null;
+	}
+
+
 	void Init()
 	{
 		ProjectileThrower.getInstance ().InitK();
 		timer.color = Color.white;
 		timer.fontSize = 32;
 	}
+
+
 	void timerUI()
 	{
 		time += Time.deltaTime;
@@ -230,12 +259,16 @@ public class GameManager : MonoBehaviour
 
 		int a = int.Parse(timeStr.Substring (0, 2));
 		int b = int.Parse(timeStr.Substring(3,2));
-		int time1 = 60 - a;
+		int time1 = 59 - a;
 		int time2 = 99 - b;
 		timeStr = time1.ToString("00") + ":" + time2.ToString("00");
 		timer.text = timeStr;
 	}
 
+
+	/// <summary>
+	/// 키넥트에서 사용자를 인식 중인지 확인하여, 아닐 경우 Pause 상태로 만든다.
+	/// </summary>
 	void checkKinectCalibration()
 	{
 		if (currentState == GameState.RUNNING || currentState == GameState.PAUSE) {
@@ -379,37 +412,38 @@ public class GameManager : MonoBehaviour
 		case GameState.IDLE:
 			initGameData();
 			break;
-
+			
 		case GameState.OPENING:
 			if (currentState != GameState.IDLE)
 				return;
-
+			
 			playOpening();
 			break;
-
+			
 		case GameState.RUNNING:
 			if (currentState == GameState.PAUSE) {
 				Time.timeScale = 1;
 			}
-
+			
 			RenderSettings.ambientLight = Color.white;
 			break;
-
+			
 		case GameState.PAUSE:
 			Time.timeScale = 0;
 			RenderSettings.ambientLight = Color.black;
 			break;
-
+			
 		case GameState.ENDING:
 			playEnding();
 			break;
 			
 		case GameState.RESULT:
 			RenderSettings.ambientLight = Color.black;
+			startResultModule();
 			break;
 		}
 		updateUI(nextState);
-
+		
 		currentState = nextState;
 	}
 
@@ -419,28 +453,28 @@ public class GameManager : MonoBehaviour
 		gameUILayer.SetActive(false);
 		resultUILayer.SetActive(false);
 		pauseUILayer.SetActive(false);
-
+		
+		menuCursor.enabled = false;
+		
 		switch (nextState) {
 		case GameState.OPENING:
 		case GameState.ENDING:
 			break;
-
+			
 		case GameState.IDLE:
 			if (_foodImageObject != null) {
 				DestroyObject(_foodImageObject);
 			}
 			break;
-
+			
 		case GameState.PAUSE:
 			pauseUILayer.SetActive(true);
-			menuCursor.enabled = false;
 			break;
-		
+			
 		case GameState.RUNNING:
 			gameUILayer.SetActive(true);
-			menuCursor.enabled = false;
 			break;
-		
+			
 		case GameState.RESULT:
 			resultUILayer.SetActive(true);
 			menuCursor.enabled = true;
@@ -456,8 +490,40 @@ public class GameManager : MonoBehaviour
 	}
 
 
-	void OnDisable()
+	private void startResultModule()
 	{
-		instance = null;
+		if (resultModule == null)
+			return;
+		
+		Hashtable paramTable = new Hashtable();
+		
+		int bestFoodIndex = 3;	//TODO: 테스트용으로 0 할당
+		int worstFoodIndex = 2; //TODO: 테스트용으로 1 할당
+		
+		int grade = calculateGrade(currentScore, currentCalorie);
+		string gradeText = getGradeText(grade);
+		
+		paramTable.Add("grade", gradeText);
+		paramTable.Add("score", currentScore);
+		paramTable.Add("calorie", currentCalorie);
+		paramTable.Add("max_combo", currentMaxCombo);
+		paramTable.Add("best_food", bestFoodIndex);
+		paramTable.Add("worst_food", worstFoodIndex);
+		
+		resultModule.startModule(paramTable);
+	}
+
+
+	private int calculateGrade(int score, int calorie)
+	{
+		//TODO: 사용자의 점수와 칼로리 소비량에 따라 등급을 매기고 이를 반환한다.
+		return 0;
+	}
+	
+	
+	private string getGradeText(int grade)
+	{
+		//TODO: 등급에 따른 텍스트를 반환한다.
+		return "Grade Text";
 	}
 }
