@@ -11,14 +11,6 @@ public class KinectGameHandController : KinectHandController
 	public Transform rightHand;
 
 
-	void Update()
-	{
-		if (false == isPlayerCalibrated()) {
-			setVisibleGameHands(false);
-		}
-	}
-
-
 	public override void onUpdateHand(Vector3 leftHandPos, Vector3 rightHandPos)
 	{
 		bool gameRunning = GameManager.getInstance().isGameRunning();

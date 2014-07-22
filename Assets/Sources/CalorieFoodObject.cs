@@ -19,9 +19,6 @@ public class CalorieFoodObject : MonoBehaviour
 		{
 			Destroy (gameObject);
 		}
-
-		if(transform.position.y <= 3)
-			consumeFood ();
 	}
 
 
@@ -37,7 +34,7 @@ public class CalorieFoodObject : MonoBehaviour
 			showFoodImage();
 			show_Text (transform);
 
-			//consumeFood();
+			consumeFood();
 		}
 		Destroy (gameObject);
 	}

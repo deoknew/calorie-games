@@ -14,15 +14,27 @@ public class ProjectileThrower : MonoBehaviour
 	public float waitTime=0.4f;
 	public int [] fireArray;
 	public int k = 0;
+
+	private static ProjectileThrower instance;
+	
+	public static ProjectileThrower getInstance() {
+		return instance;
+	}
+
 	IEnumerator Start()
 	{
 
 		startPoint = GameObject.Find (THROWING_POINT_NAME).transform;
 
-		do{
+		while(true){
 			yield return new WaitForSeconds(waitTime);
+			if(GameManager.getInstance().isGameRunning()==true)
 			FireBullet ();
-		}while (GameManager.getInstance().isGameRunning()==true);
+		}
+	}
+	public void InitK()
+	{
+		k = 0;
 	}
 
 	/*void Start () 

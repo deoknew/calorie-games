@@ -192,14 +192,16 @@ public class GameManager : MonoBehaviour
 		foodIdArrayCreate();
 		startGame();
 
-		//checkKinectCalibration();   //******* 임시 수정 *******
-		resumeGame ();
+	    checkKinectCalibration();   
+
 
 	}
 
 
 	void Update ()
 	{
+		checkKinectCalibration();
+
 		if (currentState == GameState.RUNNING) {
 			timerUI ();
 			updateCalorieText();
@@ -208,28 +210,35 @@ public class GameManager : MonoBehaviour
 				timer.fontSize=34;
 
 			}
-			if (currentCalorie >= 3000 || time>=60) {
+			if (time>=60) {
 				finishGame ();
 			}
 		}
 	}
-	
+	void Init()
+	{
+		ProjectileThrower.getInstance ().InitK();
+		timer.color = Color.white;
+		timer.fontSize = 32;
+	}
 	void timerUI()
 	{
 		time += Time.deltaTime;
 		string timeStr;
 		timeStr = "" + time.ToString ("00.00");
-		timeStr = timeStr.Replace (".", ":");
+		//timeStr = timeStr.Replace (".", ":");
+
+		int a = int.Parse(timeStr.Substring (0, 2));
+		int b = int.Parse(timeStr.Substring(3,2));
+		int time1 = 60 - a;
+		int time2 = 99 - b;
+		timeStr = time1.ToString("00") + ":" + time2.ToString("00");
 		timer.text = timeStr;
-
-
-
-
 	}
 
 	void checkKinectCalibration()
 	{
-		if (currentState == GameState.RUNNING || currentState == GameState.RESULT) {
+		if (currentState == GameState.RUNNING || currentState == GameState.PAUSE) {
 			KinectManager kinectManager = KinectManager.Instance;
 			if (kinectManager == null)
 				return;
@@ -247,6 +256,8 @@ public class GameManager : MonoBehaviour
 
 	void prepareGame()
 	{
+
+
 		updateState(GameState.IDLE);
 	}
 

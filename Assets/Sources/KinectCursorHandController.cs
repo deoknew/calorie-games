@@ -20,17 +20,11 @@ public class KinectCursorHandController : KinectHandController
 	}
 
 
-	void Update()
+	public override void onUpdateHand(Vector3 leftHandPos, Vector3 rightHandPos)
 	{
 		if (false == isPlayerCalibrated()) {
 			setVisibleGameCursor(false);
 		}
-	}
-
-
-	public override void onUpdateHand(Vector3 leftHandPos, Vector3 rightHandPos)
-	{
-		setVisibleGameCursor(true);
 
 		KinectGUIHandler handlerScript = kinectGUIHandler.GetComponent<KinectGUIHandler>();
 
