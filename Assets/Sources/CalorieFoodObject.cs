@@ -8,9 +8,7 @@ public class CalorieFoodObject : MonoBehaviour
 
 	public int calorie;
 	public int foodId;
-
-	//public Transform Material;
-	//public UILabel AddedCalorieText;
+	
 
 	
 	private static CalorieFoodObject instance;
@@ -27,8 +25,9 @@ public class CalorieFoodObject : MonoBehaviour
 
 	void Update() 
 	{
-		if (transform.position.y <= 3 || GameManager.getInstance().isGameFinished())
+		if (transform.position.z <= 14 || GameManager.getInstance().isGameFinished())
 		{
+			GameManager.getInstance().resetCombo();
 			Destroy (gameObject);
 		}
 	}
@@ -47,11 +46,16 @@ public class CalorieFoodObject : MonoBehaviour
 			show_Text (transform);
 			CollsionFoodID();
 			consumeFood();
+
+			Combo();
 		}
 		Destroy (gameObject);
 	}
 
-
+	public void Combo()
+	{
+		GameManager.getInstance ().addCombo ();
+	}
 	void show_Text(Transform tr)
 	{
 		GameManager.getInstance ().showText (tr,calorie);
@@ -78,7 +82,7 @@ public class CalorieFoodObject : MonoBehaviour
 	void CollsionFoodID()
 	{
 		GameManager.getInstance ().CheckFoodCrash (foodId);
-		Debug.Log (foodId);
+
 	}
 
 

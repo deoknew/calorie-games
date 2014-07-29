@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
 	public GUITexture menuCursor;
 	public GUIText calorieText;
 	public GUIText MaterialCalorie;
-	public GUIText textHit;  //물체 충돌시 물체 위치에 바로 표시되는 칼로리량 
+	public GUIText textCombo;  //물체 충돌시 물체 위치에 바로 표시되는 칼로리량 
 
 	public GameModule runningModule;
 	public GameModule resultModule;
@@ -109,8 +109,20 @@ public class GameManager : MonoBehaviour
 			_foodImageObject.transform.parent = gameUILayer.transform;
 		}
 	}
+	public void resetCombo()
+	{
+		textCombo.enabled = false;
+		currentCombo = 0;
+	}
+	public void addCombo()
+	{
+		currentCombo++;
+		textCombo.enabled=true;
+		textCombo.text = "+" + currentCombo;
 
-	
+		if(currentCombo > currentMaxCombo)
+			currentMaxCombo = currentCombo;
+	}
 	public void showText(Transform transform,int calorie)
 	{
 		//text_Hit.transform.guiText.text=calorie.ToString ();
@@ -121,7 +133,7 @@ public class GameManager : MonoBehaviour
 		Destroy (text.gameObject, 0.5f);
 
 	}
-	public void foodIdArrayCreate()
+	public void foodIdArrayCreate()  //음식인덱스 배열 생성 함수 /// 게임 시작시 음식인덱스를 저장한 배열 생성 
 	{
 
 		foodIdArray = new int[150];
@@ -167,15 +179,15 @@ public class GameManager : MonoBehaviour
 	{
 		NumberOfCollision [FoodID] += 1;
 
+
 	}
-	/*int getMostCollisionFood()
+	int getMostCollisionFood()
 	{
 		int max;
-		int maxNum;
+		int maxNum=0;
 		max=NumberOfCollision[0];
-		for(int i=0; i<10;)
+		for(int i=0; i<10; ++i)
 		{
-			i++;
 			if(max < NumberOfCollision[i])
 			{
 				max=NumberOfCollision[i];
@@ -183,7 +195,7 @@ public class GameManager : MonoBehaviour
 			}
 		}
 		return maxNum;
-	}*/
+	}
 
 	public void restart()
 	{
@@ -206,6 +218,7 @@ public class GameManager : MonoBehaviour
 
 	void init()
 	{
+		textCombo.enabled = false;
 		instance = this;
 	}
 
@@ -220,7 +233,8 @@ public class GameManager : MonoBehaviour
 			NumberOfCollision[i]=0;
 
 		currentCalorie = 0;
-		
+		currentCombo = 0;
+		currentMaxCombo = 0;
 		time = 0.0f;
 		
 		ProjectileThrower.getInstance ().InitK();
@@ -249,15 +263,16 @@ public class GameManager : MonoBehaviour
 		if (currentState == GameState.RUNNING) {
 			timerUI ();
 			updateCalorieText();
-			if(time<=10)
+			if(time>=20)
 			{	timer.color=Color.red;
 				timer.fontSize=34;
 
 			}
-			if (time>=60) {
+			if (time>=30) {
 				finishGame ();
 			}
 		}
+
 	}
 
 
