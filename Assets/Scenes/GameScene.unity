@@ -995,56 +995,6 @@ MonoBehaviour:
   HandCursor1: {fileID: 0}
   HandCursor2: {fileID: 0}
   ControlMouseCursor: 0
---- !u!1 &330308453
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 330308455}
-  - 132: {fileID: 330308454}
-  m_Layer: 0
-  m_Name: Text_Calorie_Pre
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!132 &330308454
-GUIText:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 330308453}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Text: "\uCE7C\uB85C\uB9AC:"
-  m_Anchor: 0
-  m_Alignment: 0
-  m_PixelOffset: {x: 0, y: 0}
-  m_LineSpacing: 1
-  m_TabSize: 4
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-  m_Material: {fileID: 0}
-  m_FontSize: 32
-  m_FontStyle: 0
-  m_Color:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_PixelCorrect: 1
-  m_RichText: 1
---- !u!4 &330308455
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 330308453}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.32357216, y: .358778238, z: 2.61976051}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1308052400}
 --- !u!1 &413598322
 GameObject:
   m_ObjectHideFlags: 0
@@ -1439,7 +1389,7 @@ GameObject:
   - 4: {fileID: 710397740}
   - 132: {fileID: 710397739}
   m_Layer: 0
-  m_Name: Text_Calorie_Value
+  m_Name: Text_Score_Value
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2784,7 +2734,6 @@ Transform:
   m_Children:
   - {fileID: 138827640}
   - {fileID: 1335651975}
-  - {fileID: 330308455}
   - {fileID: 710397740}
   - {fileID: 42718522}
   - {fileID: 803150502}
@@ -2872,7 +2821,7 @@ GUIText:
   m_GameObject: {fileID: 1326039239}
   m_Enabled: 1
   serializedVersion: 3
-  m_Text: Banana
+  m_Text: 
   m_Anchor: 0
   m_Alignment: 2
   m_PixelOffset: {x: 0, y: 0}
@@ -3665,7 +3614,7 @@ MonoBehaviour:
   resultUILayer: {fileID: 1875538470}
   pauseUILayer: {fileID: 1258214852}
   menuCursor: {fileID: 1272546433}
-  calorieText: {fileID: 710397739}
+  scoreText: {fileID: 710397739}
   MaterialCalorie: {fileID: 42718523}
   textCombo: {fileID: 138827639}
   runningModule: {fileID: 0}
@@ -3748,7 +3697,7 @@ GUIText:
   m_GameObject: {fileID: 1753974279}
   m_Enabled: 1
   serializedVersion: 3
-  m_Text: Banana
+  m_Text: 
   m_Anchor: 0
   m_Alignment: 2
   m_PixelOffset: {x: 0, y: 0}

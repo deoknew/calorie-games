@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
 	public GameObject pauseUILayer;
 
 	public GUITexture menuCursor;
-	public GUIText calorieText;
+	public GUIText scoreText;
 	public GUIText MaterialCalorie;
 	public GUIText textCombo;  //물체 충돌시 물체 위치에 바로 표시되는 칼로리량 
 
@@ -60,8 +60,8 @@ public class GameManager : MonoBehaviour
 		get { return currentScore; }
 	}
 	
-	private int currentCalorie;
-	public int CurrentCalorie {
+	private float currentCalorie;
+	public float CurrentCalorie {
 		get { return currentCalorie; }
 	}
 
@@ -164,23 +164,47 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	public void addCalorie(int calorie)
+	public void addScore(int score)
 	{
-		currentCalorie += calorie;
+		currentScore += score;
 	}
 
 
-	public void showCalorie(int calorie)
+	public void addMovingDistance(float distance)
+	{
+		currentCalorie += getCalorieFromDistance(distance);
+	}
+
+
+	public float getCalorieFromDistance(float distance)
+	{
+		// 임시로 가정된 수치로 계산함
+
+		const float K = 0.000325f;
+		const float U = 0.1615f;
+
+		float calorie = 0.0f;
+		calorie = ((distance / U) * K);
+
+		return calorie;
+	}
+
+
+	public void showScore(int score)
 	{
 		if (MaterialCalorie != null)
-			MaterialCalorie.text = calorie.ToString();
+			MaterialCalorie.text = score.ToString();
 	}
+
+
 	public void CheckFoodCrash(int FoodID)
 	{
 		NumberOfCollision [FoodID] += 1;
 
 
 	}
+
+
 	int getMostCollisionFood()
 	{
 		int max;
@@ -195,6 +219,23 @@ public class GameManager : MonoBehaviour
 			}
 		}
 		return maxNum;
+	}
+
+
+	int getLeastCollisionFood()
+	{
+		int min;
+		int minNum=0;
+		min=NumberOfCollision[0];
+		for(int i=0; i<10; ++i)
+		{
+			if(min > NumberOfCollision[i])
+			{
+				min=NumberOfCollision[i];
+				minNum=i;
+			}
+		}
+		return minNum;
 	}
 
 	public void restart()
@@ -232,7 +273,7 @@ public class GameManager : MonoBehaviour
 		for (int i=0; i<projectiles.Length; i++) 
 			NumberOfCollision[i]=0;
 
-		currentCalorie = 0;
+		currentCalorie = 0.0f;
 		currentCombo = 0;
 		currentMaxCombo = 0;
 		time = 0.0f;
@@ -262,7 +303,7 @@ public class GameManager : MonoBehaviour
 
 		if (currentState == GameState.RUNNING) {
 			timerUI ();
-			updateCalorieText();
+			updateScoreText();
 			if(time>=20)
 			{	timer.color=Color.red;
 				timer.fontSize=34;
@@ -319,7 +360,6 @@ public class GameManager : MonoBehaviour
 
 	void prepareGame()
 	{
-
 		updateState(GameState.IDLE);
 	}
 
@@ -327,7 +367,6 @@ public class GameManager : MonoBehaviour
 	void startGame()
 	{
 		updateState(GameState.OPENING);
-
 	}
 
 
@@ -512,10 +551,10 @@ public class GameManager : MonoBehaviour
 	}
 
 
-	void updateCalorieText()
+	void updateScoreText()
 	{
-		if (calorieText != null)
-			calorieText.text = currentCalorie.ToString();	
+		if (scoreText != null)
+			scoreText.text = currentScore.ToString();
 	}
 
 
@@ -526,15 +565,18 @@ public class GameManager : MonoBehaviour
 		
 		Hashtable paramTable = new Hashtable();
 		
-		int bestFoodIndex = 3;	//TODO: 테스트용으로 0 할당
-		int worstFoodIndex = 2; //TODO: 테스트용으로 1 할당
+		int bestFoodIndex = getMostCollisionFood();
+		int worstFoodIndex = getLeastCollisionFood();
 		
 		int grade = calculateGrade(currentScore, currentCalorie);
 		string gradeText = getGradeText(grade);
-		
+	
+		// 소수점 두 번째 자리까지 표시
+		float roundedCalorie = Mathf.Round(currentCalorie * 100) / 100;
+
 		paramTable.Add("grade", gradeText);
 		paramTable.Add("score", currentScore);
-		paramTable.Add("calorie", currentCalorie);
+		paramTable.Add("calorie", roundedCalorie);
 		paramTable.Add("max_combo", currentMaxCombo);
 		paramTable.Add("best_food", bestFoodIndex);
 		paramTable.Add("worst_food", worstFoodIndex);
@@ -543,16 +585,22 @@ public class GameManager : MonoBehaviour
 	}
 
 
-	private int calculateGrade(int score, int calorie)
+	private int calculateGrade(int score, float calorie)
 	{
-		//TODO: 사용자의 점수와 칼로리 소비량에 따라 등급을 매기고 이를 반환한다.
-		return 0;
+		// 임시로 등급을 SSS, SS, S, A, B, C, D, F 8단계로 구분
+		return (score / 1000);
 	}
 	
 	
 	private string getGradeText(int grade)
 	{
-		//TODO: 등급에 따른 텍스트를 반환한다.
-		return "Grade Text";
+		string[] GRADE_TEXT = {
+			"F", "D", "C", "B", "A", "S", "SS", "SSS",
+		};
+
+		if (grade > GRADE_TEXT.Length)
+			grade = GRADE_TEXT.Length;
+
+		return GRADE_TEXT[grade];
 	}
 }

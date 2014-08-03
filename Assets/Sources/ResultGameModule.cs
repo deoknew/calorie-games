@@ -55,8 +55,8 @@ public class ResultGameModule : GameModule
 	private void showResult()
 	{
 		scoreText.text = _scoreValue;
-		calorieText.text = _calorieValue;
-		maxComboText.text = _maxComboValue;
+		calorieText.text = _calorieValue + " kcal";
+		maxComboText.text = _maxComboValue + " Combo";
 		gradeText.text = _gradeValue;
 
 		_bestFoodObject = instantiateFoodObject(bestFoodPoint, int.Parse(_bestFoodIndex));

@@ -70,14 +70,14 @@ public class CalorieFoodObject : MonoBehaviour
 
 	void showFoodCalorie()
 	{
-		GameManager.getInstance ().showCalorie (calorie);
+		GameManager.getInstance ().showScore (calorie);
 
 	}
 
 
 	void consumeFood()
 	{
-		GameManager.getInstance().addCalorie(calorie);
+		GameManager.getInstance().addScore(calorie);
 	}
 	void CollsionFoodID()
 	{

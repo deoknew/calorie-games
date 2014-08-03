@@ -10,6 +10,9 @@ public class KinectGameHandController : KinectHandController
 	public Transform leftHand;
 	public Transform rightHand;
 
+	private Vector3 prevLeftHandPosition;
+	private Vector3 prevRightHandPosition;
+
 
 	public override void onUpdateHand(Vector3 leftHandPos, Vector3 rightHandPos)
 	{
@@ -44,6 +47,33 @@ public class KinectGameHandController : KinectHandController
 		if (rightHand != null) {
 			rightHand.position = rightHandPos;
 		}
+	
+		float distance = 0.0f;
+
+		if (prevLeftHandPosition.magnitude == 0) {
+			prevLeftHandPosition = leftHandPos;
+		}
+
+		if (prevRightHandPosition.magnitude == 0) {
+			prevRightHandPosition = rightHandPos;
+		}
+
+		distance += 
+			Mathf.Sqrt(
+				Mathf.Pow(Mathf.Abs(prevLeftHandPosition.x - leftHandPos.x), 2.0f) 
+				+ Mathf.Pow(Mathf.Abs(prevLeftHandPosition.y - leftHandPos.y), 2.0f)
+			);
+
+		distance += 
+			Mathf.Sqrt(
+				Mathf.Pow(Mathf.Abs(prevRightHandPosition.x - rightHandPos.x), 2.0f) 
+				+ Mathf.Pow(Mathf.Abs(prevRightHandPosition.y - rightHandPos.y), 2.0f)
+			);
+
+		GameManager.getInstance().addMovingDistance(distance);
+
+		prevLeftHandPosition = leftHandPos;
+		prevRightHandPosition = rightHandPos;
 	}
 
 
