@@ -118,7 +118,7 @@ public class GameManager : MonoBehaviour
 	{
 		currentCombo++;
 		textCombo.enabled=true;
-		textCombo.text = "+" + currentCombo;
+		textCombo.text = currentCombo+"Combo";
 
 		if(currentCombo > currentMaxCombo)
 			currentMaxCombo = currentCombo;
@@ -280,7 +280,7 @@ public class GameManager : MonoBehaviour
 		
 		ProjectileThrower.getInstance ().InitK();
 		timer.color = Color.white;
-		timer.fontSize = 32;
+		//timer.fontSize = 32;
 	}
 
 	
@@ -306,7 +306,7 @@ public class GameManager : MonoBehaviour
 			updateScoreText();
 			if(time>=20)
 			{	timer.color=Color.red;
-				timer.fontSize=34;
+				//timer.fontSize=34;
 
 			}
 			if (time>=30) {
