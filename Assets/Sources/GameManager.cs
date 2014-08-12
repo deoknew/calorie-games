@@ -18,16 +18,31 @@ public class GameManager : MonoBehaviour
 
 	public GUITexture menuCursor;
 	public GUIText scoreText;
-	public GUIText MaterialCalorie;
-	public GUIText textCombo;  //물체 충돌시 물체 위치에 바로 표시되는 칼로리량 
+	//
+	public GUIText GUI_firstCalorie;
+	public GUIText GUI_secondCalorie;
+	public GUIText GUI_thirdCalorie;
+	//
+	public GUIText textCombo;  
 
 	public GameModule runningModule;
 	public GameModule resultModule;
 
 	public GUIText timer;  //타이머 텍스트 
 
+	/// <summary>
 	public int[] foodIdArray;  //발사할 음식 인덱스 배열 
 	public int [] NumberOfCollision;
+	public GameObject firstFoodImage;
+	public GameObject secondFoodImage;
+	public GameObject thirdFoodImage;
+
+	public int firstCalorie;
+	public int secondCalorie;
+	public int thirdCalorie;
+
+	public int sequence=0; //첫번째 물체를 맞추었나? 두번째 물체를 맞추었나? 세번째 물체를 맞추었나?
+	/// <summary>
 
 	public Transform[] projectiles;
 	public GUITexture ImagePanel;
@@ -92,7 +107,7 @@ public class GameManager : MonoBehaviour
 		return (currentState == GameState.RESULT);
 	}
 
-
+	/*
 	public void showFoodImage(int foodId)
 	{
 		if (_foodImageObject != null)
@@ -107,6 +122,31 @@ public class GameManager : MonoBehaviour
 			_foodImageObject.rigidbody.useGravity = false;
 
 			_foodImageObject.transform.parent = gameUILayer.transform;
+		}
+	}*/
+	public void showFoodImage(string imageName)
+	{
+		string texturePath = "file://" + Application.dataPath + "\\Images\\" + imageName;
+		WWW textureLoad = new WWW (texturePath);
+
+		
+
+		if (sequence == 0) 
+		{
+			firstFoodImage.GetComponent<GUITexture> ().texture = textureLoad.texture;
+		}
+		if(sequence == 1)
+		{
+			secondFoodImage.GetComponent<GUITexture>().texture = firstFoodImage.GetComponent<GUITexture>().texture;
+			firstFoodImage.GetComponent<GUITexture> ().texture = textureLoad.texture;
+
+		}
+		if(sequence >= 2)
+		{
+			thirdFoodImage.GetComponent<GUITexture>().texture = secondFoodImage.GetComponent<GUITexture>().texture;
+			secondFoodImage.GetComponent<GUITexture>().texture = firstFoodImage.GetComponent<GUITexture>().texture;
+			firstFoodImage.GetComponent<GUITexture> ().texture = textureLoad.texture;
+
 		}
 	}
 	public void resetCombo()
@@ -190,10 +230,37 @@ public class GameManager : MonoBehaviour
 	}
 
 
-	public void showScore(int score)
+	public void showCalorie(int score)
 	{
-		if (MaterialCalorie != null)
-			MaterialCalorie.text = score.ToString();
+       //if(GUI_firstCalorie!= null /*&& GUI_secondCalorie != null && GUI_thirdCalorie != null*/)
+	   {
+			firstCalorie=score;
+			GUI_firstCalorie.text = score.ToString();
+
+			 if (sequence == 0)
+			 {
+				Debug.Log("a");
+				secondCalorie=firstCalorie;
+			 }
+			 if(sequence == 1)
+			{
+				Debug.Log("b");
+				GUI_secondCalorie.text = secondCalorie.ToString();
+				thirdCalorie=secondCalorie;
+				secondCalorie=firstCalorie;
+
+
+			}
+			if(sequence >=2)
+			{
+				Debug.Log("c");
+				GUI_secondCalorie.text = secondCalorie.ToString();
+				GUI_thirdCalorie.text = thirdCalorie.ToString();
+				thirdCalorie=secondCalorie;
+				secondCalorie=firstCalorie;
+			}
+			sequence++;
+	   }
 	}
 
 
@@ -259,6 +326,8 @@ public class GameManager : MonoBehaviour
 
 	void init()
 	{
+
+		//foodImage.enabled = false;
 		textCombo.enabled = false;
 		instance = this;
 	}

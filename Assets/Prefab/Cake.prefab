@@ -99,9 +99,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   consumeAudio: {fileID: 8300000, guid: 32e9cd68366245043ae7cafddb2b8aec, type: 3}
-  consumeParticle: {fileID: 400000, guid: 9c5bd6070cd5d481abdb8755ff51fd7a, type: 2}
+  consumeParticle: {fileID: 400000, guid: 6d7cce7d1ed0a414e8f32e8d7be1918c, type: 2}
   calorie: 235
   foodId: 1
+  imageName: cake.jpg
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

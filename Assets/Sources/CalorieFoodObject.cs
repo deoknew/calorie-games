@@ -8,8 +8,7 @@ public class CalorieFoodObject : MonoBehaviour
 
 	public int calorie;
 	public int foodId;
-	
-
+	public string imageName;
 	
 	private static CalorieFoodObject instance;
 	
@@ -41,13 +40,14 @@ public class CalorieFoodObject : MonoBehaviour
 			Destroy(obj.gameObject, 1);
 
 			AudioSource.PlayClipAtPoint(consumeAudio, transform.position, 1.0f);
-			showFoodCalorie();
 			showFoodImage();
+			showFoodCalorie();
 			show_Text (transform);
 			CollsionFoodID();
 			consumeFood();
 
 			Combo();
+		
 		}
 		Destroy (gameObject);
 	}
@@ -64,13 +64,13 @@ public class CalorieFoodObject : MonoBehaviour
 
 	void showFoodImage()
 	{
-		GameManager.getInstance ().showFoodImage (foodId);
+		GameManager.getInstance ().showFoodImage (imageName);
 	}
 
 
 	void showFoodCalorie()
 	{
-		GameManager.getInstance ().showScore (calorie);
+		GameManager.getInstance ().showCalorie (calorie);
 
 	}
 
