@@ -36,6 +36,9 @@ public class CalorieFoodObject : MonoBehaviour
 	{
 		if (!collision.collider.tag.Equals("Non-Explosion"))
 		{
+			if(foodId==12)
+				GameManager.getInstance().setFeverTime(true);
+
 			Transform obj = (Transform)Instantiate (consumeParticle, transform.position, Quaternion.identity);
 			Destroy(obj.gameObject, 1);
 

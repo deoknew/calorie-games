@@ -42,13 +42,29 @@ public class GameManager : MonoBehaviour
 	public int thirdCalorie;
 
 	public int sequence=0; //첫번째 물체를 맞추었나? 두번째 물체를 맞추었나? 세번째 물체를 맞추었나?
+	public Material skyBox;
+	public Light Dlight;
+	public GameObject[] feverParticle;
+	public GameObject backGround;
+	public GUITexture feverTimeText;
+
+	float time;
+	float feverTime;
+
+	private bool isFeverTime;
+	public void setFeverTime(bool isfevertime){
+		isFeverTime = isfevertime;
+	}
+	public bool IsFeverTime {
+		get { return isFeverTime; }
+	}
+	private bool isFirst=true;
 	/// <summary>
 
 	public Transform[] projectiles;
-	public GUITexture ImagePanel;
 	public Transform text_Hit;
 
-	float time;
+
 
 
 	private GameObject _foodImageObject;
@@ -129,8 +145,6 @@ public class GameManager : MonoBehaviour
 		string texturePath = "file://" + Application.dataPath + "\\Images\\" + imageName;
 		WWW textureLoad = new WWW (texturePath);
 
-		
-
 		if (sequence == 0) 
 		{
 			firstFoodImage.GetComponent<GUITexture> ().texture = textureLoad.texture;
@@ -202,6 +216,22 @@ public class GameManager : MonoBehaviour
 			}
 
 		}
+		int a = (int)Random.Range (0, 20);
+		int b = (int)Random.Range (21, 40);
+		int c = (int)Random.Range (41, 60);
+		int d = (int)Random.Range (61, 79);
+		foodIdArray [a] = 11;
+		foodIdArray [b] = 11;
+		foodIdArray [c] = 11;
+		foodIdArray [d] = 11;
+		// 폭탄 생성 
+
+		int e = (int)Random.Range (10, 20);
+		int f = (int)Random.Range (80, 100);
+		foodIdArray [e] = 12;
+		foodIdArray [f] = 12;
+
+
 	}
 
 	public void addScore(int score)
@@ -239,12 +269,12 @@ public class GameManager : MonoBehaviour
 
 			 if (sequence == 0)
 			 {
-				Debug.Log("a");
+
 				secondCalorie=firstCalorie;
 			 }
 			 if(sequence == 1)
 			{
-				Debug.Log("b");
+
 				GUI_secondCalorie.text = secondCalorie.ToString();
 				thirdCalorie=secondCalorie;
 				secondCalorie=firstCalorie;
@@ -253,7 +283,6 @@ public class GameManager : MonoBehaviour
 			}
 			if(sequence >=2)
 			{
-				Debug.Log("c");
 				GUI_secondCalorie.text = secondCalorie.ToString();
 				GUI_thirdCalorie.text = thirdCalorie.ToString();
 				thirdCalorie=secondCalorie;
@@ -346,10 +375,12 @@ public class GameManager : MonoBehaviour
 		currentCombo = 0;
 		currentMaxCombo = 0;
 		time = 0.0f;
+		feverTime = 0.0f;
 		
 		ProjectileThrower.getInstance ().InitK();
 		timer.color = Color.white;
-		//timer.fontSize = 32;
+		isFeverTime = false;
+		timer.fontSize = 60;
 	}
 
 	
@@ -373,14 +404,60 @@ public class GameManager : MonoBehaviour
 		if (currentState == GameState.RUNNING) {
 			timerUI ();
 			updateScoreText();
-			if(time>=20)
-			{	timer.color=Color.red;
-				//timer.fontSize=34;
-
+			if(time>=50.0f && time <= 50.3f)
+			{	
+				timer.color=Color.red;
+				timer.fontSize=67;
+				//RenderSettings.skybox=skyBox;
+				//feverParticle[0].renderer.enabled = true;
 			}
-			if (time>=30) {
+			if (time>=60.0f) {
 				finishGame ();
 			}
+
+		}
+
+		if(isFeverTime==true && isFirst == true)
+		{
+			backGround.renderer.enabled=false;
+			//RenderSettings.skybox=skyBox;
+			Dlight.color=Color.yellow;
+			Dlight.intensity=3.8f;
+			ProjectileThrower.getInstance().setWaitTime(0.2f);
+
+
+			for(int i=0; i<14; i++)
+			{
+				feverParticle[i].renderer.enabled = true;
+				feverParticle[i].particleSystem.Play();
+			}
+
+			isFirst=false;
+		}
+
+		if (isFeverTime == true) 
+		{
+			feverTime += Time.deltaTime;
+
+			if(feverTime<=0.5f)
+				feverTimeText.enabled=true;
+			else
+				feverTimeText.enabled=false;
+		}
+
+		if (feverTime >= 5.0f && feverTime <=5.3f) 
+		{
+			isFeverTime = false;
+			backGround.renderer.enabled=true;
+			feverTime=0.0f;
+			isFirst=true;
+			ProjectileThrower.getInstance().setWaitTime(0.4f);
+
+			Dlight.color=Color.white;
+			Dlight.intensity=0.5f;
+
+			for(int i=0; i<14; i++)
+				feverParticle[i].renderer.enabled=false;
 		}
 
 	}

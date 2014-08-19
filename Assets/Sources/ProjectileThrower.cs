@@ -13,7 +13,11 @@ public class ProjectileThrower : MonoBehaviour
 	public int powerY;
 	public float throwRate;
 	
-	public float waitTime;
+	private float waitTime=0.4f;
+	public void setWaitTime (float wtime)
+	{
+		waitTime = wtime;
+	}
 	public int [] fireArray;
 	public int k = 0;
 	
@@ -110,22 +114,28 @@ public class ProjectileThrower : MonoBehaviour
 
 		AudioSource.PlayClipAtPoint(throwAudio, startPoint.position, 1.0f);
 
-		k++;
+
 	}
 
 	void Fire(int shootPoint, int projectileIndex, Vector3 forceVector, Vector3 torqueVector)
 	{
 		Transform obj;
 		Transform[] projectiles = GameManager.getInstance().projectiles;
+		k++;
 
+		if (GameManager.getInstance ().IsFeverTime == true)
+		{		
+			projectileIndex = 13;
+			k--;
+		}
 		obj = Instantiate (projectiles [projectileIndex], shootPoints[shootPoint], Quaternion.identity) as Transform;
 		obj.rigidbody.mass = 1.2f;
 		obj.rigidbody.AddForce (forceVector);
 		obj.rigidbody.AddTorque (torqueVector);
 
 		obj.transform.localScale *= 2;
+		Debug.Log ("k="+k);
 	}
-
 
 	void startShooterMoving()
 	{
