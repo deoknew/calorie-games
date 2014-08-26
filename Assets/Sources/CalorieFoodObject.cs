@@ -43,8 +43,9 @@ public class CalorieFoodObject : MonoBehaviour
 			Destroy(obj.gameObject, 1);
 
 			AudioSource.PlayClipAtPoint(consumeAudio, transform.position, 1.0f);
-			showFoodImage();
 			showFoodCalorie();
+			showFoodImage();
+
 			show_Text (transform);
 			CollsionFoodID();
 			consumeFood();

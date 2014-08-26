@@ -19,9 +19,7 @@ public class GameManager : MonoBehaviour
 	public GUITexture menuCursor;
 	public GUIText scoreText;
 	//
-	public GUIText GUI_firstCalorie;
-	public GUIText GUI_secondCalorie;
-	public GUIText GUI_thirdCalorie;
+	public GUIText [] GUI_Calorie;
 	//
 	public GUIText textCombo;  
 
@@ -33,23 +31,30 @@ public class GameManager : MonoBehaviour
 	/// <summary>
 	public int[] foodIdArray;  //발사할 음식 인덱스 배열 
 	public int [] NumberOfCollision;
-	public GameObject firstFoodImage;
-	public GameObject secondFoodImage;
-	public GameObject thirdFoodImage;
 
-	public int firstCalorie;
-	public int secondCalorie;
-	public int thirdCalorie;
+	public GameObject [] foodBackGround;
+	public GameObject[] foodImage;
 
-	public int sequence=0; //첫번째 물체를 맞추었나? 두번째 물체를 맞추었나? 세번째 물체를 맞추었나?
-	public Material skyBox;
+	private int firstCalorie;
+	private int secondCalorie;
+	private int thirdCalorie;
+
+
+	private int foodNum1=0;
+	private int foodNum2=1;
+	private int foodNum3=2;
+
+	private int sequence=0; //첫번째 물체를 맞추었나? 두번째 물체를 맞추었나? 세번째 물체를 맞추었나?
+	public Material feverSkyBox;
+	public Material basicSkyBox;
 	public Light Dlight;
 	public GameObject[] feverParticle;
-	public GameObject backGround;
+	//public GameObject backGround;
 	public GUITexture feverTimeText;
 
 	float time;
 	float feverTime;
+	float startTime; // 안쓰면삭제 
 
 	private bool isFeverTime;
 	public void setFeverTime(bool isfevertime){
@@ -63,10 +68,7 @@ public class GameManager : MonoBehaviour
 
 	public Transform[] projectiles;
 	public Transform text_Hit;
-
-
-
-
+	
 	private GameObject _foodImageObject;
 
 	private static GameManager instance;
@@ -140,7 +142,7 @@ public class GameManager : MonoBehaviour
 			_foodImageObject.transform.parent = gameUILayer.transform;
 		}
 	}*/
-	public void showFoodImage(string imageName)
+	/*public void showFoodImage(string imageName)
 	{
 		string texturePath = "file://" + Application.dataPath + "\\Images\\" + imageName;
 		WWW textureLoad = new WWW (texturePath);
@@ -162,6 +164,59 @@ public class GameManager : MonoBehaviour
 			firstFoodImage.GetComponent<GUITexture> ().texture = textureLoad.texture;
 
 		}
+	}*/
+
+	public void showFoodImage(string imageName)
+	{
+		string texturePath = "file://" + Application.dataPath + "\\Images\\" + imageName;
+		WWW textureLoad = new WWW (texturePath);
+
+		startTime = Time.time;
+
+		if (sequence == 1) 
+		{
+			foodImage[0].GetComponent<GUITexture> ().texture = textureLoad.texture;
+		}
+		if(sequence == 2)
+		{
+			foodImage[1].GetComponent<GUITexture>().texture = textureLoad.texture;
+		}
+		if(sequence == 3)
+		{
+			foodImage[2].GetComponent<GUITexture>().texture = textureLoad.texture;
+		}
+		if(sequence >= 4)
+		{
+			foodImage[foodNum3].GetComponent<GUITexture> ().texture = textureLoad.texture;
+		}
+	}
+	public void showCalorie(int score)
+	{
+		sequence++;
+		if (sequence == 1)
+			GUI_Calorie[0].text = score.ToString();
+		
+		if(sequence == 2)
+			GUI_Calorie[1].text = score.ToString();
+		
+		if(sequence ==3)
+			GUI_Calorie[2].text = score.ToString();
+		
+		if(sequence >=4)
+		{
+			foodNum1++;
+			foodNum2++;
+			foodNum3++;
+			if(foodNum1>2)
+				foodNum1=0;
+			if(foodNum2>2)
+				foodNum2=0;
+			if(foodNum3>2)
+				foodNum3=0;
+
+			GUI_Calorie[foodNum3].text = score.ToString();
+
+		}
 	}
 	public void resetCombo()
 	{
@@ -179,10 +234,7 @@ public class GameManager : MonoBehaviour
 	}
 	public void showText(Transform transform,int calorie)
 	{
-		//text_Hit.transform.guiText.text=calorie.ToString ();
 
-		//textHit.text = calorie.ToString ();
-		//Transform text=(Transform) Instantiate(textHit.transform, transform.position, Quaternion.identity);
 		Transform text=(Transform) Instantiate(text_Hit, transform.position, Quaternion.identity);
 		Destroy (text.gameObject, 0.5f);
 
@@ -260,19 +312,19 @@ public class GameManager : MonoBehaviour
 	}
 
 
-	public void showCalorie(int score)
+/*	public void showCalorie(int score)
 	{
-       //if(GUI_firstCalorie!= null /*&& GUI_secondCalorie != null && GUI_thirdCalorie != null*/)
+       
 	   {
 			firstCalorie=score;
 			GUI_firstCalorie.text = score.ToString();
-
-			 if (sequence == 0)
+			sequence++;
+			 if (sequence == 1)
 			 {
 
 				secondCalorie=firstCalorie;
 			 }
-			 if(sequence == 1)
+			 if(sequence == 2)
 			{
 
 				GUI_secondCalorie.text = secondCalorie.ToString();
@@ -281,23 +333,21 @@ public class GameManager : MonoBehaviour
 
 
 			}
-			if(sequence >=2)
+			if(sequence >=3)
 			{
 				GUI_secondCalorie.text = secondCalorie.ToString();
 				GUI_thirdCalorie.text = thirdCalorie.ToString();
 				thirdCalorie=secondCalorie;
 				secondCalorie=firstCalorie;
 			}
-			sequence++;
+
 	   }
-	}
+	}*/
 
 
 	public void CheckFoodCrash(int FoodID)
 	{
 		NumberOfCollision [FoodID] += 1;
-
-
 	}
 
 
@@ -367,6 +417,8 @@ public class GameManager : MonoBehaviour
 	/// </summary>
 	void initGameData()
 	{
+
+
 		NumberOfCollision = new int[projectiles.Length];
 		for (int i=0; i<projectiles.Length; i++) 
 			NumberOfCollision[i]=0;
@@ -376,8 +428,10 @@ public class GameManager : MonoBehaviour
 		currentMaxCombo = 0;
 		time = 0.0f;
 		feverTime = 0.0f;
-		
-		ProjectileThrower.getInstance ().InitK();
+
+		if(ProjectileThrower.getInstance()!=null)
+			ProjectileThrower.getInstance ().InitK();
+
 		timer.color = Color.white;
 		isFeverTime = false;
 		timer.fontSize = 60;
@@ -419,8 +473,8 @@ public class GameManager : MonoBehaviour
 
 		if(isFeverTime==true && isFirst == true)
 		{
-			backGround.renderer.enabled=false;
-			//RenderSettings.skybox=skyBox;
+			//backGround.renderer.enabled=false;
+			RenderSettings.skybox=feverSkyBox;
 			Dlight.color=Color.yellow;
 			Dlight.intensity=3.8f;
 			ProjectileThrower.getInstance().setWaitTime(0.2f);
@@ -448,7 +502,9 @@ public class GameManager : MonoBehaviour
 		if (feverTime >= 5.0f && feverTime <=5.3f) 
 		{
 			isFeverTime = false;
-			backGround.renderer.enabled=true;
+			//backGround.renderer.enabled=true;
+			RenderSettings.skybox=basicSkyBox;
+
 			feverTime=0.0f;
 			isFirst=true;
 			ProjectileThrower.getInstance().setWaitTime(0.4f);
@@ -460,8 +516,49 @@ public class GameManager : MonoBehaviour
 				feverParticle[i].renderer.enabled=false;
 		}
 
-	}
+		////////////
+	 	
+		backGroundTranslate ();
 
+		//////////////
+	}
+	void backGroundTranslate()  // 우측 상단 네모칸 이동부분 
+	{
+		Vector3 startPoint = new Vector3 (1.5f, 0.634f, -1.0f);
+		Vector3 firstPoint = new Vector3 (0.87f, 0.634f, -1.0f);
+		Vector3 secondPoint = new Vector3 (0.87f, 0.717f, -1.0f);
+		Vector3 thirdPoint = new Vector3 (0.87f, 0.8f, -1.0f);
+		float fracComplete = (Time.time - startTime) / 0.4f;
+		if (sequence == 1) 
+		{				
+			foodBackGround[0].transform.position = Vector3.Slerp (startPoint, firstPoint, fracComplete);
+		}
+		if(sequence == 2)
+		{
+			foodBackGround[0].transform.position = Vector3.Slerp (firstPoint, secondPoint, fracComplete);
+			foodBackGround[1].transform.position = Vector3.Slerp (startPoint, firstPoint, fracComplete);
+		}
+		if(sequence == 3)
+		{
+			foodBackGround[0].transform.position = Vector3.Slerp (secondPoint, thirdPoint, fracComplete);
+			foodBackGround[1].transform.position = Vector3.Slerp (firstPoint, secondPoint, fracComplete);
+			foodBackGround[2].transform.position = Vector3.Slerp (startPoint, firstPoint, fracComplete);
+		}
+		if(sequence >= 4)
+		{
+			if(foodNum1>2)
+				foodNum1=0;
+			if(foodNum2>2)
+				foodNum2=0;
+			if(foodNum3>2)
+				foodNum3=0;
+			
+			foodBackGround[foodNum3].transform.position = Vector3.Slerp (startPoint, firstPoint, fracComplete);
+			foodBackGround[foodNum1].transform.position = Vector3.Slerp (secondPoint, thirdPoint, fracComplete);
+			foodBackGround[foodNum2].transform.position = Vector3.Slerp (firstPoint, secondPoint, fracComplete);
+			
+		}
+	}
 
 	void OnDisable()
 	{

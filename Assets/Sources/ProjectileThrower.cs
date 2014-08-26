@@ -134,7 +134,7 @@ public class ProjectileThrower : MonoBehaviour
 		obj.rigidbody.AddTorque (torqueVector);
 
 		obj.transform.localScale *= 2;
-		Debug.Log ("k="+k);
+
 	}
 
 	void startShooterMoving()
@@ -154,6 +154,7 @@ public class ProjectileThrower : MonoBehaviour
 		if (shooterMoving) {
 			float fracComplete = (Time.time - startTime) / waitTime;
 			shooter.transform.position = Vector3.Slerp (shootPoints [currentPoint], shootPoints [nextPoint], fracComplete);
+
 		}
 	}
 }
