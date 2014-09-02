@@ -494,7 +494,14 @@ public class GameManager : MonoBehaviour
 			feverTime += Time.deltaTime;
 
 			if(feverTime<=0.5f)
+			{
 				feverTimeText.enabled=true;
+				Vector3 startPoint = new Vector3 (transform.lossyScale.x*0.2f,transform.lossyScale.y*0.2f);
+				Vector3 firstPoint = new Vector3 (transform.lossyScale.x*0.4f, transform.lossyScale.y*0.4f);
+				float fracComplete = (Time.time - startTime) / 0.4f;
+
+				feverTimeText.transform.localScale=Vector3.Slerp (startPoint,firstPoint,fracComplete);
+			}
 			else
 				feverTimeText.enabled=false;
 		}
