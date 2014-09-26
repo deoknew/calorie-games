@@ -9,8 +9,7 @@ public class ProjectileThrower : MonoBehaviour
 	
 	public AudioClip throwAudio;
 	public Transform throwEffect;
-
-	public int powerY;
+	
 	public float throwRate;
 	
 	private float waitTime=0.4f;
@@ -18,9 +17,11 @@ public class ProjectileThrower : MonoBehaviour
 	{
 		waitTime = wtime;
 	}
-	public int [] fireArray;
-	public int k = 0;
-	
+	private int [] fireArray;
+	private int k = 0;
+
+	private int fp = 0;
+
 	private int currentPoint;
 	private int nextPoint;
 	private float startTime;
@@ -43,14 +44,48 @@ public class ProjectileThrower : MonoBehaviour
 		currentPoint = -1;
 		nextPoint = -1;
 
-		Vector3[] sp = new Vector3[6];
-		sp[0] = new Vector3 (startPoint.position.x+8.0f, startPoint.position.y, startPoint.position.z);
-		sp[1] = new Vector3 (startPoint.position.x-8.0f, startPoint.position.y, startPoint.position.z);
-		sp[2] = new Vector3 (startPoint.position.x+8.0f, startPoint.position.y-5.0f, startPoint.position.z);
-		sp[3] = new Vector3 (startPoint.position.x-8.0f, startPoint.position.y-5.0f, startPoint.position.z);
-		sp[4] = new Vector3 (startPoint.position.x, startPoint.position.y-5.0f, startPoint.position.z);
-		sp[5] = startPoint.position;
+		Vector3[] sp = new Vector3[26];
 
+		for(int i=0,x=-22; i<5; i++)
+		{
+			for(int j=0,y=10; j<5; j++)
+			{
+				sp[i*5+j]= new Vector3 (startPoint.position.x+x,startPoint.position.y+y,startPoint.position.z);
+				y-=5;
+			}
+			x+=10;
+		}
+			
+		/*sp[0] = new Vector3 (startPoint.position.x-20.0f, startPoint.position.y+6.0f, startPoint.position.z);
+		sp[1] = new Vector3 (startPoint.position.x-20.0f, startPoint.position.y+3.0f, startPoint.position.z);                                                                                                                                                                                                                                                                                                                                                                                                                  
+		sp[2] = new Vector3 (startPoint.position.x-20.0f, startPoint.position.y, startPoint.position.z);
+		sp[3] = new Vector3 (startPoint.position.x-20.0f, startPoint.position.y-3.0f, startPoint.position.z);
+		sp[4] = new Vector3 (startPoint.position.x-20.0f, startPoint.position.y-6.0f, startPoint.position.z);
+
+		sp[5] = new Vector3 (startPoint.position.x-10.0f, startPoint.position.y+6.0f, startPoint.position.z);
+		sp[6] = new Vector3 (startPoint.position.x-10.0f, startPoint.position.y+3.0f, startPoint.position.z);
+		sp[7] = new Vector3 (startPoint.position.x-10.0f, startPoint.position.y, startPoint.position.z);
+		sp[8] = new Vector3 (startPoint.position.x-10.0f, startPoint.position.y-3.0f, startPoint.position.z);
+		sp[9] = new Vector3 (startPoint.position.x-10.0f, startPoint.position.y-6.0f, startPoint.position.z);
+
+		sp[10] = new Vector3 (startPoint.position.x, startPoint.position.y+6.0f, startPoint.position.z);
+		sp[11] = new Vector3 (startPoint.position.x, startPoint.position.y+3.0f, startPoint.position.z);
+		sp[12] = startPoint.position;
+		sp[13] = new Vector3 (startPoint.position.x, startPoint.position.y-3.0f, startPoint.position.z);
+		sp[14] = new Vector3 (startPoint.position.x, startPoint.position.y-6.0f, startPoint.position.z);
+
+		sp[15] = new Vector3 (startPoint.position.x+10.0f, startPoint.position.y+6.0f, startPoint.position.z);
+		sp[16] = new Vector3 (startPoint.position.x+10.0f, startPoint.position.y+3.0f, startPoint.position.z);
+		sp[17] = new Vector3 (startPoint.position.x+10.0f, startPoint.position.y, startPoint.position.z);
+		sp[18] = new Vector3 (startPoint.position.x+10.0f, startPoint.position.y-3.0f, startPoint.position.z);
+		sp[19] = new Vector3 (startPoint.position.x+10.0f, startPoint.position.y-6.0f, startPoint.position.z);
+	
+		sp[20] = new Vector3 (startPoint.position.x+18.0f, startPoint.position.y+6.0f, startPoint.position.z);
+		sp[21] = new Vector3 (startPoint.position.x+18.0f, startPoint.position.y+3.0f, startPoint.position.z);
+		sp[22] = new Vector3 (startPoint.position.x+18.0f, startPoint.position.y, startPoint.position.z);
+		sp[23] = new Vector3 (startPoint.position.x+18.0f, startPoint.position.y-3.0f, startPoint.position.z);
+		sp[24] = new Vector3 (startPoint.position.x+18.0f, startPoint.position.y-6.0f, startPoint.position.z);
+*/
 		shootPoints = sp;
 
 		while(true){
@@ -91,21 +126,63 @@ public class ProjectileThrower : MonoBehaviour
 		const int MIN_TORQUE = 0;
 		const int MAX_TORQUE = 8;
 
-		int powerZ = Random.Range (2600, 3100);
-		//int powerX = Random.Range (-300, 300);
+		//int powerZ = Random.Range (2600, 3100);
+		int powerZ = 5000;
 		int powerX = 0;
+		int powerY = 0;
+
 		//int index = (int)Random.Range(0, projectiles.Length-1);
 		int index = fireArray[k];
 
 		currentPoint = nextPoint;
-		nextPoint = (int)Random.Range (0, 5);
+		nextPoint = (int)Random.Range (0, 24);
 
 		if (currentPoint == -1)
 			currentPoint = nextPoint;
 
 		startShooterMoving ();
+		int InsertPower = 500;
+		Vector3 forceVector = new Vector3(powerX, powerY, powerZ * -1);
+		//
+		if (currentPoint >= 0 && currentPoint <= 4) {
+			if(currentPoint == 0)
+				forceVector = new Vector3 (1300,-InsertPower, powerZ * -1);
+			else if(currentPoint == 4)
+				forceVector = new Vector3 (1300, InsertPower, powerZ * -1);
+			else
+				forceVector = new Vector3 (1300, powerY * 0.1f, powerZ * -1);
+				}
 
-		Vector3 forceVector = new Vector3(powerX, powerY*0.1f, powerZ * -1);
+		if (currentPoint >= 5 && currentPoint <= 9) {
+			if(currentPoint == 5)
+				forceVector = new Vector3 (500, -InsertPower, powerZ * -1);
+			else if(currentPoint == 9)
+				forceVector = new Vector3 (500, InsertPower, powerZ * -1);
+			else	
+				forceVector = new Vector3 (500, powerY * 0.1f, powerZ * -1);
+				}
+
+		if(currentPoint ==10)
+			forceVector = new Vector3(powerX, -InsertPower, powerZ * -1);
+
+		if (currentPoint >= 15 && currentPoint <= 19) {
+			if(currentPoint == 15)
+				forceVector = new Vector3 (-800,-InsertPower, powerZ * -1);
+			else if(currentPoint == 19)
+				forceVector = new Vector3 (-800, InsertPower, powerZ * -1);
+			else
+				forceVector = new Vector3 (-800, powerY * 0.1f, powerZ * -1);
+				}
+
+		if (currentPoint >= 20 && currentPoint <= 24) {
+			if(currentPoint == 20)		
+				forceVector = new Vector3 (-1500, -InsertPower , powerZ * -1);
+			else if(currentPoint == 24)
+				forceVector = new Vector3 (-1500, InsertPower, powerZ * -1);
+			else
+				forceVector = new Vector3 (-1500, powerY * 0.1f, powerZ * -1);
+				}
+		//
 		Vector3 torqueVector = new Vector3();
 		for (int i = 0; i < 3; ++i)
 			torqueVector[i] = Random.Range(MIN_TORQUE, MAX_TORQUE);
@@ -114,7 +191,7 @@ public class ProjectileThrower : MonoBehaviour
 
 		AudioSource.PlayClipAtPoint(throwAudio, startPoint.position, 1.0f);
 
-
+		Debug.Log ("delta time = " + Time.deltaTime);
 	}
 
 	void Fire(int shootPoint, int projectileIndex, Vector3 forceVector, Vector3 torqueVector)
@@ -125,6 +202,8 @@ public class ProjectileThrower : MonoBehaviour
 
 		if (GameManager.getInstance ().IsFeverTime == true)
 		{		
+			Debug.Log ("발사 수: "+fp);
+			fp++;
 			projectileIndex = 13;
 			k--;
 		}

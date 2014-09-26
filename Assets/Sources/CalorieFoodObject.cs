@@ -24,7 +24,7 @@ public class CalorieFoodObject : MonoBehaviour
 
 	void Update() 
 	{
-		if (transform.position.z <= 14 || GameManager.getInstance().isGameFinished())
+		if (transform.position.z <= 2.5 || GameManager.getInstance().isGameFinished())
 		{
 			GameManager.getInstance().resetCombo();
 			Destroy (gameObject);
