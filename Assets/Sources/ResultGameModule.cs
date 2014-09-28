@@ -8,16 +8,13 @@ public class ResultGameModule : GameModule
 	public GUIText maxComboText;
 	public GUIText gradeText;
 	public Transform bestFoodPoint;
-	public Transform worstFoodPoint;
 
 	private GameObject _bestFoodObject;
-	private GameObject _worstFoodObject;
 
 	private string _calorieValue;
 	private string _scoreValue;
 	private string _maxComboValue;
 	private string _bestFoodIndex;
-	private string _worstFoodIndex;
 	private string _gradeValue;
 
 
@@ -25,10 +22,6 @@ public class ResultGameModule : GameModule
 	{
 		if (_bestFoodObject != null) {
 			_bestFoodObject.transform.Rotate(0, 1, 0);
-		}
-
-		if (_worstFoodObject != null) {
-			_worstFoodObject.transform.Rotate(0, 1, 0);
 		}
 	}
 
@@ -45,7 +38,6 @@ public class ResultGameModule : GameModule
 		_scoreValue = paramTable["score"].ToString();
 		_maxComboValue = paramTable["max_combo"].ToString();
 		_bestFoodIndex = paramTable["best_food"].ToString();
-		_worstFoodIndex = paramTable["worst_food"].ToString();
 		_gradeValue = paramTable["grade"].ToString();
 
 		showResult();
@@ -55,12 +47,11 @@ public class ResultGameModule : GameModule
 	private void showResult()
 	{
 		scoreText.text = _scoreValue;
-		calorieText.text = _calorieValue + " kcal";
+		calorieText.text = _calorieValue;
 		maxComboText.text = _maxComboValue + " Combo";
 		gradeText.text = _gradeValue;
 
 		_bestFoodObject = instantiateFoodObject(bestFoodPoint, int.Parse(_bestFoodIndex));
-		_worstFoodObject = instantiateFoodObject(worstFoodPoint, int.Parse(_worstFoodIndex));
 	}
 
 

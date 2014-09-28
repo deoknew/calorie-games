@@ -465,7 +465,7 @@ public class GameManager : MonoBehaviour
 				//RenderSettings.skybox=skyBox;
 				//feverParticle[0].renderer.enabled = true;
 			}
-			if (time>=60.0f) {
+			if (time>=10.0f) {
 				finishGame ();
 			}
 
@@ -816,8 +816,7 @@ public class GameManager : MonoBehaviour
 		Hashtable paramTable = new Hashtable();
 		
 		int bestFoodIndex = getMostCollisionFood();
-		int worstFoodIndex = getLeastCollisionFood();
-		
+
 		int grade = calculateGrade(currentScore, currentCalorie);
 		string gradeText = getGradeText(grade);
 	
@@ -829,7 +828,6 @@ public class GameManager : MonoBehaviour
 		paramTable.Add("calorie", roundedCalorie);
 		paramTable.Add("max_combo", currentMaxCombo);
 		paramTable.Add("best_food", bestFoodIndex);
-		paramTable.Add("worst_food", worstFoodIndex);
 		
 		resultModule.startModule(paramTable);
 	}
@@ -848,8 +846,11 @@ public class GameManager : MonoBehaviour
 			"F", "D", "C", "B", "A", "S", "SS", "SSS",
 		};
 
-		if (grade > GRADE_TEXT.Length)
-			grade = GRADE_TEXT.Length;
+		if (grade < 0)
+			grade = 0;
+
+		if (grade >= GRADE_TEXT.Length)
+			grade = GRADE_TEXT.Length - 1;
 
 		return GRADE_TEXT[grade];
 	}
