@@ -465,7 +465,7 @@ public class GameManager : MonoBehaviour
 				//RenderSettings.skybox=skyBox;
 				//feverParticle[0].renderer.enabled = true;
 			}
-			if (time>=10.0f) {
+			if (time>=30.0f) {
 				finishGame ();
 			}
 
