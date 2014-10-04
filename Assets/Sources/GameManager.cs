@@ -3,6 +3,8 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour 
 {
+	private const float PLAY_TIME = 30.0f;
+
 	enum GameState {
 		IDLE, 
 		OPENING, 
@@ -67,7 +69,6 @@ public class GameManager : MonoBehaviour
 	/// <summary>
 
 	public Transform[] projectiles;
-	public Transform text_Hit;
 	
 	private GameObject _foodImageObject;
 
@@ -168,6 +169,8 @@ public class GameManager : MonoBehaviour
 
 	public void showFoodImage(string imageName)
 	{
+		return;
+
 		string texturePath = "file://" + Application.dataPath + "\\Images\\" + imageName;
 		WWW textureLoad = new WWW (texturePath);
 
@@ -218,27 +221,26 @@ public class GameManager : MonoBehaviour
 
 		}
 	}
+
+
 	public void resetCombo()
 	{
 		textCombo.enabled = false;
 		currentCombo = 0;
 	}
+
+
 	public void addCombo()
 	{
 		currentCombo++;
 		textCombo.enabled=true;
-		textCombo.text = currentCombo+"Combo";
+		textCombo.text = currentCombo + " Combo";
 
 		if(currentCombo > currentMaxCombo)
 			currentMaxCombo = currentCombo;
 	}
-	public void showText(Transform transform,int calorie)
-	{
 
-		Transform text=(Transform) Instantiate(text_Hit, transform.position, Quaternion.identity);
-		Destroy (text.gameObject, 0.5f);
 
-	}
 	public void foodIdArrayCreate()  //음식인덱스 배열 생성 함수 /// 게임 시작시 음식인덱스를 저장한 배열 생성 
 	{
 
@@ -417,8 +419,6 @@ public class GameManager : MonoBehaviour
 	/// </summary>
 	void initGameData()
 	{
-
-
 		NumberOfCollision = new int[projectiles.Length];
 		for (int i=0; i<projectiles.Length; i++) 
 			NumberOfCollision[i]=0;
@@ -434,7 +434,6 @@ public class GameManager : MonoBehaviour
 
 		timer.color = Color.white;
 		isFeverTime = false;
-		timer.fontSize = 60;
 	}
 
 	
@@ -458,14 +457,13 @@ public class GameManager : MonoBehaviour
 		if (currentState == GameState.RUNNING) {
 			timerUI ();
 			updateScoreText();
-			if(time>=50.0f && time <= 50.3f)
+			if(time >= 50.0f && time <= 50.3f)
 			{	
 				timer.color=Color.red;
-				timer.fontSize=67;
 				//RenderSettings.skybox=skyBox;
 				//feverParticle[0].renderer.enabled = true;
 			}
-			if (time>=30.0f) {
+			if (time >= PLAY_TIME) {
 				finishGame ();
 			}
 
@@ -836,14 +834,14 @@ public class GameManager : MonoBehaviour
 	private int calculateGrade(int score, float calorie)
 	{
 		// 임시로 등급을 SSS, SS, S, A, B, C, D, F 8단계로 구분
-		return (score / 1000);
+		return (score / 3000);
 	}
 	
 	
 	private string getGradeText(int grade)
 	{
 		string[] GRADE_TEXT = {
-			"F", "D", "C", "B", "A", "S", "SS", "SSS",
+			"F", "D", "C", "B", "A", "S", "SS",
 		};
 
 		if (grade < 0)

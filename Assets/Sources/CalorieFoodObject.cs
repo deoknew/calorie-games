@@ -4,7 +4,7 @@ using System.Collections;
 public class CalorieFoodObject : MonoBehaviour
 {
 	public AudioClip consumeAudio;
-	public Transform consumeParticle;
+	public GameObject consumeParticle;
 
 	public int calorie;
 	public int foodId;
@@ -39,14 +39,13 @@ public class CalorieFoodObject : MonoBehaviour
 			if(foodId==12)
 				GameManager.getInstance().setFeverTime(true);
 
-			Transform obj = (Transform)Instantiate (consumeParticle, transform.position, Quaternion.identity);
-			Destroy(obj.gameObject, 1);
+			GameObject obj = (GameObject)Instantiate (consumeParticle, transform.position, Quaternion.identity);
+			Destroy(obj, 1);
 
 			AudioSource.PlayClipAtPoint(consumeAudio, transform.position, 1.0f);
 			showFoodCalorie();
 			showFoodImage();
 
-			show_Text (transform);
 			CollsionFoodID();
 			consumeFood();
 
@@ -56,13 +55,10 @@ public class CalorieFoodObject : MonoBehaviour
 		Destroy (gameObject);
 	}
 
+
 	public void Combo()
 	{
 		GameManager.getInstance ().addCombo ();
-	}
-	void show_Text(Transform tr)
-	{
-		GameManager.getInstance ().showText (tr,calorie);
 	}
 
 

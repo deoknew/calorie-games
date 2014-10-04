@@ -29,8 +29,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 1, y: 0, z: -0, w: 8.14603425e-08}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: .0217205919, y: .0217205919, z: .0217205919}
+  m_LocalPosition: {x: 0, y: .5, z: 0}
+  m_LocalScale: {x: .0199999996, y: .0199999996, z: .0199999996}
   m_Children: []
   m_Father: {fileID: 0}
 --- !u!23 &2300000
@@ -157,7 +157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   consumeAudio: {fileID: 8300000, guid: 32e9cd68366245043ae7cafddb2b8aec, type: 3}
-  consumeParticle: {fileID: 400000, guid: 6d7cce7d1ed0a414e8f32e8d7be1918c, type: 2}
+  consumeParticle: {fileID: 100000, guid: 404369c624751974a954787d09acb53d, type: 2}
   calorie: 30
   foodId: 7
   imageName: 2.jpg

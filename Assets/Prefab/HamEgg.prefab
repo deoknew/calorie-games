@@ -28,8 +28,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.142082065, y: 0, z: .304537803}
-  m_LocalScale: {x: 3.5, y: 3.5, z: 3.5}
+  m_LocalPosition: {x: 0, y: .100000001, z: 0}
+  m_LocalScale: {x: 4.5, y: 4.5, z: 4.5}
   m_Children: []
   m_Father: {fileID: 0}
 --- !u!23 &2300000
@@ -142,7 +142,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   consumeAudio: {fileID: 8300000, guid: 32e9cd68366245043ae7cafddb2b8aec, type: 3}
-  consumeParticle: {fileID: 400000, guid: 6d7cce7d1ed0a414e8f32e8d7be1918c, type: 2}
+  consumeParticle: {fileID: 100000, guid: 404369c624751974a954787d09acb53d, type: 2}
   calorie: 260
   foodId: 4
   imageName: hamegg.jpg

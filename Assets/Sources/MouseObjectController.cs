@@ -14,6 +14,7 @@ public class MouseObjectController : MonoBehaviour
 		mousePos.z = DEFAULT_Z_POSITION;
 		
 		Vector3 objectPos = Camera.main.ScreenToWorldPoint (mousePos);
+		objectPos.z = transform.position.z;
 		transform.position = objectPos;
 
 		//(!) 테스트를 위해 마우스로 이동한 거리도 전송
