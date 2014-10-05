@@ -25,13 +25,11 @@ public class ResultGameModule : GameModule
 	private int _currentCombo;
 	private int _currentScore;
 	private float _currentPosition;
-	
-	private bool _moduleRunning;
 
 
 	void Update()
 	{
-		if (!_moduleRunning)
+		if (!Running)
 			return;
 
 		if (_bestFoodObject != null) {
@@ -39,7 +37,7 @@ public class ResultGameModule : GameModule
 			_bestFoodObject.transform.RotateAround(point, new Vector3(0.0f, 1.0f, 0.0f), 1.0f);
 		}
 
-		if (_maxComboValue != null && _currentCombo < _maxComboValue) {
+		if (maxComboText != null && _currentCombo < _maxComboValue) {
 			_currentCombo += 1;
 			if (_currentCombo > _maxComboValue)
 				_currentCombo = _maxComboValue;
@@ -47,16 +45,16 @@ public class ResultGameModule : GameModule
 			maxComboText.text = string.Format("{0}", _currentCombo);
 		}
 
-		if (_scoreValue != null && _currentScore < _scoreValue) {
-			_currentScore += (_scoreValue / 50);
+		if (scoreText != null && _currentScore < _scoreValue) {
+			_currentScore += (_scoreValue / 40);
 			if (_currentScore > _scoreValue)
 				_currentScore = _scoreValue;
 
 			scoreText.text = string.Format("{0}", _currentScore);
 		}
 
-		if (_calorieValue != null && _currentCalorie < _calorieValue) {
-			_currentCalorie += (_calorieValue / 50.0f);
+		if (calorieText != null && _currentCalorie < _calorieValue) {
+			_currentCalorie += (_calorieValue / 40.0f);
 			if (_currentCalorie > _calorieValue)
 				_currentCalorie = _calorieValue;
 
@@ -65,7 +63,7 @@ public class ResultGameModule : GameModule
 
 		if (resultBackground != null) {
 			if (_currentPosition > MAX_BG_POSITION) {
-				_currentPosition -= 0.04f;
+				_currentPosition -= 0.05f;
 				if (_currentPosition < MAX_BG_POSITION) {
 					_currentPosition = MAX_BG_POSITION;
 					showResult();
@@ -95,7 +93,7 @@ public class ResultGameModule : GameModule
 		_bestFoodIndex = int.Parse(paramTable["best_food"].ToString());
 		_gradeValue = paramTable["grade"].ToString();
 
-		_moduleRunning = true;
+		Running = true;
 	}
 
 

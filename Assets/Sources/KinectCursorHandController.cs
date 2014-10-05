@@ -7,11 +7,14 @@ public class KinectCursorHandController : KinectHandController
 	private const float NULL_POSITION = 2014.7f;
 	private const float CHECK_TIME = 0.15f;
 	private const float CLICK_THRESHOLD = 0.2f;
+	private const float MOVE_SPEED_X = 0.5f;
+	private const float MOVE_SPEED_Y = 0.8f;
 
 	private float _prevZ;
 	private float _tickTime;
 
 	public GameObject kinectGUIHandler;
+	public GameObject clickParticle;
 
 
 	void Start()
@@ -20,8 +23,24 @@ public class KinectCursorHandController : KinectHandController
 	}
 
 
+	private void showClickParticle(Vector3 position)
+	{
+		if (clickParticle != null) {
+			Vector3 realPosition = Camera.allCameras[1].ViewportToWorldPoint(position);
+			realPosition.z = 0.0f;
+
+			GameObject obj = (GameObject)Instantiate (clickParticle, realPosition, Quaternion.identity);
+			obj.layer = LayerMask.NameToLayer("GUI");
+			Destroy(obj, 2);
+		}
+	}
+
+
 	public override void onUpdateHand(Vector3 leftHandPos, Vector3 rightHandPos)
 	{
+		if (!GameManager.getInstance().isGameResult())
+			return;
+
 		if (false == isPlayerCalibrated()) {
 			setVisibleGameCursor(false);
 		}
@@ -30,8 +49,8 @@ public class KinectCursorHandController : KinectHandController
 
 		_tickTime += Time.deltaTime;
 
-		rightHandPos.x += 0.3f;
-		rightHandPos.y -= 0.5f;
+		rightHandPos.x += MOVE_SPEED_X;
+		rightHandPos.y -= MOVE_SPEED_Y;
 		
 		if (_prevZ == NULL_POSITION && rightHandPos.z > 0.0f) {
 			_prevZ = rightHandPos.z;
@@ -41,6 +60,7 @@ public class KinectCursorHandController : KinectHandController
 				if (_prevZ - rightHandPos.z > CLICK_THRESHOLD) {
 					if (handlerScript != null) {
 						handlerScript.receiveClickEvent(rightHandPos.x, rightHandPos.y);
+						showClickParticle(rightHandPos);
 					}
 				}
 				_tickTime = 0.0f;

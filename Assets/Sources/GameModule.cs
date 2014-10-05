@@ -4,7 +4,7 @@ using System.Collections;
 public abstract class GameModule : MonoBehaviour 
 {
 	private bool _running;
-	public bool isRunning {
+	public bool Running {
 		set { _running = value; }
 		get { return _running; }
 	}

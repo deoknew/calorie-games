@@ -3,12 +3,13 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour 
 {
-	private const float PLAY_TIME = 30.0f;
+	private const float PLAY_TIME = 10.0f;
 
 	enum GameState {
 		IDLE, 
 		OPENING, 
-		PAUSE, 
+		PAUSE,
+		RESUME,
 		RUNNING, 
 		ENDING, 
 		RESULT,
@@ -27,6 +28,8 @@ public class GameManager : MonoBehaviour
 
 	public GameModule runningModule;
 	public GameModule resultModule;
+	public GameModule pauseModule;
+	public GameModule openingModule;
 
 	public GUIText timer;  //타이머 텍스트 
 
@@ -69,8 +72,6 @@ public class GameManager : MonoBehaviour
 	/// <summary>
 
 	public Transform[] projectiles;
-	
-	private GameObject _foodImageObject;
 
 	private static GameManager instance;
 
@@ -111,7 +112,7 @@ public class GameManager : MonoBehaviour
 
 	public bool isGamePause()
 	{
-		return (currentState == GameState.PAUSE);
+		return (currentState == GameState.PAUSE) || (currentState == GameState.RESUME);
 	}
 
 
@@ -126,51 +127,9 @@ public class GameManager : MonoBehaviour
 		return (currentState == GameState.RESULT);
 	}
 
-	/*
-	public void showFoodImage(int foodId)
-	{
-		if (_foodImageObject != null)
-			Destroy (_foodImageObject);
-
-		GameObject foodObject = (GameObject)findFoodObject(foodId);
-
-		if (foodObject != null) {
-			Transform imageLocation = GameObject.Find ("ImageLocation").transform;
-
-			_foodImageObject = (GameObject)Instantiate (foodObject, imageLocation.position, Quaternion.identity);
-			_foodImageObject.rigidbody.useGravity = false;
-
-			_foodImageObject.transform.parent = gameUILayer.transform;
-		}
-	}*/
-	/*public void showFoodImage(string imageName)
-	{
-		string texturePath = "file://" + Application.dataPath + "\\Images\\" + imageName;
-		WWW textureLoad = new WWW (texturePath);
-
-		if (sequence == 0) 
-		{
-			firstFoodImage.GetComponent<GUITexture> ().texture = textureLoad.texture;
-		}
-		if(sequence == 1)
-		{
-			secondFoodImage.GetComponent<GUITexture>().texture = firstFoodImage.GetComponent<GUITexture>().texture;
-			firstFoodImage.GetComponent<GUITexture> ().texture = textureLoad.texture;
-
-		}
-		if(sequence >= 2)
-		{
-			thirdFoodImage.GetComponent<GUITexture>().texture = secondFoodImage.GetComponent<GUITexture>().texture;
-			secondFoodImage.GetComponent<GUITexture>().texture = firstFoodImage.GetComponent<GUITexture>().texture;
-			firstFoodImage.GetComponent<GUITexture> ().texture = textureLoad.texture;
-
-		}
-	}*/
 
 	public void showFoodImage(string imageName)
 	{
-		return;
-
 		string texturePath = "file://" + Application.dataPath + "\\Images\\" + imageName;
 		WWW textureLoad = new WWW (texturePath);
 
@@ -243,7 +202,6 @@ public class GameManager : MonoBehaviour
 
 	public void foodIdArrayCreate()  //음식인덱스 배열 생성 함수 /// 게임 시작시 음식인덱스를 저장한 배열 생성 
 	{
-
 		foodIdArray = new int[150];
 		bool reverse = false;
 		int j = (int)Random.Range(0,10);
@@ -439,14 +397,13 @@ public class GameManager : MonoBehaviour
 	
 	void Start () 
 	{
-	
 		init();
 
 		prepareGame();
 		foodIdArrayCreate();
 		startGame();
 
-	    checkKinectCalibration();   
+	    checkKinectCalibration();
 	}
 
 
@@ -565,10 +522,13 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
+
 	void OnDisable()
 	{
 		instance = null;
 	}
+
+
 	void timerUI()
 	{
 		time += Time.deltaTime;
@@ -598,7 +558,8 @@ public class GameManager : MonoBehaviour
 			bool isUserDetected = KinectManager.Instance.IsUserDetected();
 
 			if (isUserDetected) {
-				resumeGame();
+				if (isGamePause())
+					resumeGame();
 			} else {
 				pauseGame();
 			}
@@ -626,8 +587,7 @@ public class GameManager : MonoBehaviour
 
 	void resumeGame()
 	{
-		updateState(GameState.RUNNING);
-
+		updateState(GameState.RESUME);
 	}
 
 	
@@ -643,7 +603,7 @@ public class GameManager : MonoBehaviour
 		startGame();
 	}
 
-
+	
 	IEnumerator runOpeningAction(int actionIndex)
 	{
 		float delay = 1.0f;
@@ -698,8 +658,16 @@ public class GameManager : MonoBehaviour
 
 	private void playOpening()
 	{
-		int actionIndex = 0;
-		StartCoroutine("runOpeningAction", actionIndex);
+		if (openingModule != null) {
+			Hashtable paramTable = new Hashtable();
+			paramTable.Add("delegate", new OpeningGameModule.OpeningFinishHandler(onOpeningFinished));
+
+			openingModule.startModule(paramTable);
+
+		} else {
+			int actionIndex = 0;
+			StartCoroutine("runOpeningAction", actionIndex);
+		}
 	}
 
 
@@ -707,6 +675,39 @@ public class GameManager : MonoBehaviour
 	{
 		int actionIndex = 0;
 		StartCoroutine("runEndingAction", actionIndex);
+	}
+
+
+	private void showPauseScreen()
+	{
+		if (pauseModule == null)
+			return;
+
+		Hashtable paramTable = new Hashtable();
+		paramTable.Add("hiding", false);
+		
+		pauseModule.startModule(paramTable);
+	}
+
+
+	private void hidePauseScreen()
+	{
+		if (pauseModule != null) {
+			Hashtable paramTable = new Hashtable();
+			paramTable.Add("hiding", true);
+			paramTable.Add("delegate", new PauseGameModule.HidingFinishHandler(onResumeFinished));
+
+			pauseModule.startModule(paramTable);
+
+		} else {
+			onResumeFinished();
+		}
+	}
+
+
+	private void onResumeFinished()
+	{
+		updateState(GameState.RUNNING);
 	}
 	
 
@@ -737,7 +738,7 @@ public class GameManager : MonoBehaviour
 			break;
 			
 		case GameState.RUNNING:
-			if (currentState == GameState.PAUSE) {
+			if (currentState == GameState.RESUME) {
 				Time.timeScale = 1;
 			}
 			
@@ -746,7 +747,11 @@ public class GameManager : MonoBehaviour
 			
 		case GameState.PAUSE:
 			Time.timeScale = 0;
-			RenderSettings.ambientLight = Color.black;
+			showPauseScreen();
+			break;
+
+		case GameState.RESUME:
+			hidePauseScreen();
 			break;
 			
 		case GameState.ENDING:
@@ -778,11 +783,9 @@ public class GameManager : MonoBehaviour
 			break;
 			
 		case GameState.IDLE:
-			if (_foodImageObject != null) {
-				DestroyObject(_foodImageObject);
-			}
 			break;
-			
+		
+		case GameState.RESUME:
 		case GameState.PAUSE:
 			pauseUILayer.SetActive(true);
 			break;
