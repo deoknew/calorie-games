@@ -27,40 +27,43 @@ public class ResultGameModule : GameModule
 	private float _currentPosition;
 
 
-	void Update()
+	protected override void onStart()
 	{
-		if (!Running)
-			return;
-
+		_currentPosition = resultBackground.transform.position.y;
+	}
+	
+	
+	protected override void onUpdate()
+	{
 		if (_bestFoodObject != null) {
 			Vector3 point = _bestFoodObject.collider.bounds.center;
 			_bestFoodObject.transform.RotateAround(point, new Vector3(0.0f, 1.0f, 0.0f), 1.0f);
 		}
-
+		
 		if (maxComboText != null && _currentCombo < _maxComboValue) {
 			_currentCombo += 1;
 			if (_currentCombo > _maxComboValue)
 				_currentCombo = _maxComboValue;
-
+			
 			maxComboText.text = string.Format("{0}", _currentCombo);
 		}
-
+		
 		if (scoreText != null && _currentScore < _scoreValue) {
 			_currentScore += (_scoreValue / 40);
 			if (_currentScore > _scoreValue)
 				_currentScore = _scoreValue;
-
+			
 			scoreText.text = string.Format("{0}", _currentScore);
 		}
-
+		
 		if (calorieText != null && _currentCalorie < _calorieValue) {
 			_currentCalorie += (_calorieValue / 40.0f);
 			if (_currentCalorie > _calorieValue)
 				_currentCalorie = _calorieValue;
-
+			
 			calorieText.text = string.Format("{0:F2}", _currentCalorie);
 		}
-
+		
 		if (resultBackground != null) {
 			if (_currentPosition > MAX_BG_POSITION) {
 				_currentPosition -= 0.05f;
@@ -68,32 +71,22 @@ public class ResultGameModule : GameModule
 					_currentPosition = MAX_BG_POSITION;
 					showResult();
 				}
-
+				
 				Vector3 position = resultBackground.transform.position;
 				position.y = _currentPosition;
 				resultBackground.transform.position = position;
 			}
 		}
 	}
-
-
-	public override void startModule(Hashtable paramTable)
+	
+	
+	protected override void onReceiveParams(Hashtable paramTable)
 	{
-		if (paramTable == null)
-			return;
-
-		if (paramTable.Count == 0)
-			return;
-
-		_currentPosition = resultBackground.transform.position.y;
-
 		_calorieValue = float.Parse(paramTable["calorie"].ToString());
 		_scoreValue = int.Parse(paramTable["score"].ToString());
 		_maxComboValue = int.Parse(paramTable["max_combo"].ToString());
 		_bestFoodIndex = int.Parse(paramTable["best_food"].ToString());
 		_gradeValue = paramTable["grade"].ToString();
-
-		Running = true;
 	}
 
 

@@ -659,10 +659,8 @@ public class GameManager : MonoBehaviour
 	private void playOpening()
 	{
 		if (openingModule != null) {
-			Hashtable paramTable = new Hashtable();
-			paramTable.Add("delegate", new OpeningGameModule.OpeningFinishHandler(onOpeningFinished));
-
-			openingModule.startModule(paramTable);
+			openingModule.OnFinished = new GameModule.OnFinishedDelegate(onOpeningFinished);
+			openingModule.start();
 
 		} else {
 			int actionIndex = 0;
@@ -685,8 +683,9 @@ public class GameManager : MonoBehaviour
 
 		Hashtable paramTable = new Hashtable();
 		paramTable.Add("hiding", false);
-		
-		pauseModule.startModule(paramTable);
+
+		pauseModule.OnFinished = null;
+		pauseModule.start(paramTable);
 	}
 
 
@@ -695,9 +694,9 @@ public class GameManager : MonoBehaviour
 		if (pauseModule != null) {
 			Hashtable paramTable = new Hashtable();
 			paramTable.Add("hiding", true);
-			paramTable.Add("delegate", new PauseGameModule.HidingFinishHandler(onResumeFinished));
 
-			pauseModule.startModule(paramTable);
+			pauseModule.OnFinished = new GameModule.OnFinishedDelegate(onResumeFinished);
+			pauseModule.start(paramTable);
 
 		} else {
 			onResumeFinished();
@@ -830,7 +829,7 @@ public class GameManager : MonoBehaviour
 		paramTable.Add("max_combo", currentMaxCombo);
 		paramTable.Add("best_food", bestFoodIndex);
 		
-		resultModule.startModule(paramTable);
+		resultModule.start(paramTable);
 	}
 
 
