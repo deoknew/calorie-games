@@ -12,7 +12,11 @@ public class ResultGameModule : GameModule
 	public Transform bestFoodPoint;
 	public GameObject resultBackground;
 	public GameObject bestFoodParticle;
+	/// <summary>
+	public ParticleRenderer effectParticle;
+	public ParticleRenderer effectParticle2;
 
+	/// </summary>
 	private GameObject _bestFoodObject;
 
 	private float _calorieValue;
@@ -100,6 +104,11 @@ public class ResultGameModule : GameModule
 			obj.layer = LayerMask.NameToLayer("GUI");
 			Destroy(obj, 2);
 		}
+	
+
+		effectParticle.enabled = true;
+		effectParticle2.enabled = true;
+
 	}
 
 

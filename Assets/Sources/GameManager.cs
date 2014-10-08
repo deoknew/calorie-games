@@ -177,7 +177,6 @@ public class GameManager : MonoBehaviour
 				foodNum3=0;
 
 			GUI_Calorie[foodNum3].text = score.ToString();
-
 		}
 	}
 

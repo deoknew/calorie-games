@@ -46,7 +46,7 @@ public class ProjectileThrower : MonoBehaviour
 
 		Vector3[] sp = new Vector3[26];
 
-		for(int i=0,x=-22; i<5; i++)
+		/*for(int i=0,x=-22; i<5; i++)
 		{
 			for(int j=0,y=10; j<5; j++)
 			{
@@ -54,25 +54,25 @@ public class ProjectileThrower : MonoBehaviour
 				y-=5;
 			}
 			x+=10;
-		}
-			
-		/*sp[0] = new Vector3 (startPoint.position.x-20.0f, startPoint.position.y+6.0f, startPoint.position.z);
-		sp[1] = new Vector3 (startPoint.position.x-20.0f, startPoint.position.y+3.0f, startPoint.position.z);                                                                                                                                                                                                                                                                                                                                                                                                                  
-		sp[2] = new Vector3 (startPoint.position.x-20.0f, startPoint.position.y, startPoint.position.z);
-		sp[3] = new Vector3 (startPoint.position.x-20.0f, startPoint.position.y-3.0f, startPoint.position.z);
-		sp[4] = new Vector3 (startPoint.position.x-20.0f, startPoint.position.y-6.0f, startPoint.position.z);
+		}*/
+		////////////
+		sp[0] = new Vector3 (startPoint.position.x-80.0f, startPoint.position.y+30.0f, startPoint.position.z);
+		sp[1] = new Vector3 (startPoint.position.x-80.0f, startPoint.position.y+20.0f, startPoint.position.z);                                                                                                                                                                                                                                                                                                                                                                                                                  
+		sp[2] = new Vector3 (startPoint.position.x-80.0f, startPoint.position.y+10.0f, startPoint.position.z);
+		sp[3] = new Vector3 (startPoint.position.x-80.0f, startPoint.position.y, startPoint.position.z);
+		sp[4] = new Vector3 (startPoint.position.x-80.0f, startPoint.position.y-10.0f, startPoint.position.z);
 
-		sp[5] = new Vector3 (startPoint.position.x-10.0f, startPoint.position.y+6.0f, startPoint.position.z);
-		sp[6] = new Vector3 (startPoint.position.x-10.0f, startPoint.position.y+3.0f, startPoint.position.z);
-		sp[7] = new Vector3 (startPoint.position.x-10.0f, startPoint.position.y, startPoint.position.z);
-		sp[8] = new Vector3 (startPoint.position.x-10.0f, startPoint.position.y-3.0f, startPoint.position.z);
-		sp[9] = new Vector3 (startPoint.position.x-10.0f, startPoint.position.y-6.0f, startPoint.position.z);
+		sp[5] = new Vector3 (startPoint.position.x-50.0f, startPoint.position.y+6.0f, startPoint.position.z);
+		sp[6] = new Vector3 (startPoint.position.x-50.0f, startPoint.position.y+3.0f, startPoint.position.z);
+		sp[7] = new Vector3 (startPoint.position.x-50.0f, startPoint.position.y, startPoint.position.z);
+		sp[8] = new Vector3 (startPoint.position.x-50.0f, startPoint.position.y-3.0f, startPoint.position.z);
+		sp[9] = new Vector3 (startPoint.position.x-50.0f, startPoint.position.y-6.0f, startPoint.position.z);
 
-		sp[10] = new Vector3 (startPoint.position.x, startPoint.position.y+6.0f, startPoint.position.z);
-		sp[11] = new Vector3 (startPoint.position.x, startPoint.position.y+3.0f, startPoint.position.z);
-		sp[12] = startPoint.position;
-		sp[13] = new Vector3 (startPoint.position.x, startPoint.position.y-3.0f, startPoint.position.z);
-		sp[14] = new Vector3 (startPoint.position.x, startPoint.position.y-6.0f, startPoint.position.z);
+		sp[10] = new Vector3 (startPoint.position.x-20.0f, startPoint.position.y+6.0f, startPoint.position.z);
+		sp[11] = new Vector3 (startPoint.position.x-20.0f, startPoint.position.y+3.0f, startPoint.position.z);
+		sp[12] = new Vector3 (startPoint.position.x-20.0f, startPoint.position.y, startPoint.position.z);
+		sp[13] = new Vector3 (startPoint.position.x-20.0f, startPoint.position.y-3.0f, startPoint.position.z);
+		sp[14] = new Vector3 (startPoint.position.x-20.0f, startPoint.position.y-6.0f, startPoint.position.z);
 
 		sp[15] = new Vector3 (startPoint.position.x+10.0f, startPoint.position.y+6.0f, startPoint.position.z);
 		sp[16] = new Vector3 (startPoint.position.x+10.0f, startPoint.position.y+3.0f, startPoint.position.z);
@@ -80,12 +80,12 @@ public class ProjectileThrower : MonoBehaviour
 		sp[18] = new Vector3 (startPoint.position.x+10.0f, startPoint.position.y-3.0f, startPoint.position.z);
 		sp[19] = new Vector3 (startPoint.position.x+10.0f, startPoint.position.y-6.0f, startPoint.position.z);
 	
-		sp[20] = new Vector3 (startPoint.position.x+18.0f, startPoint.position.y+6.0f, startPoint.position.z);
-		sp[21] = new Vector3 (startPoint.position.x+18.0f, startPoint.position.y+3.0f, startPoint.position.z);
-		sp[22] = new Vector3 (startPoint.position.x+18.0f, startPoint.position.y, startPoint.position.z);
-		sp[23] = new Vector3 (startPoint.position.x+18.0f, startPoint.position.y-3.0f, startPoint.position.z);
-		sp[24] = new Vector3 (startPoint.position.x+18.0f, startPoint.position.y-6.0f, startPoint.position.z);
-*/
+		sp[20] = new Vector3 (startPoint.position.x+35.0f, startPoint.position.y+6.0f, startPoint.position.z);
+		sp[21] = new Vector3 (startPoint.position.x+35.0f, startPoint.position.y+3.0f, startPoint.position.z);
+		sp[22] = new Vector3 (startPoint.position.x+35.0f, startPoint.position.y, startPoint.position.z);
+		sp[23] = new Vector3 (startPoint.position.x+35.0f, startPoint.position.y-3.0f, startPoint.position.z);
+		sp[24] = new Vector3 (startPoint.position.x+35.0f, startPoint.position.y-6.0f, startPoint.position.z);
+		/////////////
 		shootPoints = sp;
 
 		while(true){
@@ -135,8 +135,8 @@ public class ProjectileThrower : MonoBehaviour
 		int index = fireArray[k];
 
 		currentPoint = nextPoint;
-		nextPoint = (int)Random.Range (0, 24);
-
+		nextPoint = (int)Random.Range (17, 18);
+		Debug.Log (nextPoint);
 		if (currentPoint == -1)
 			currentPoint = nextPoint;
 
@@ -144,13 +144,16 @@ public class ProjectileThrower : MonoBehaviour
 		int InsertPower = 500;
 		Vector3 forceVector = new Vector3(powerX, powerY, powerZ * -1);
 		//
+
 		if (currentPoint >= 0 && currentPoint <= 4) {
 			if(currentPoint == 0)
-				forceVector = new Vector3 (1300,-InsertPower, powerZ * -1);
+				forceVector = new Vector3 (5500,-1500, powerZ * -1);
+			else if(currentPoint == 1)
+				forceVector = new Vector3 (5500,-1300, powerZ * -1);
 			else if(currentPoint == 4)
-				forceVector = new Vector3 (1300, InsertPower, powerZ * -1);
+				forceVector = new Vector3 (5500, 2000, powerZ * -1);
 			else
-				forceVector = new Vector3 (1300, powerY * 0.1f, powerZ * -1);
+				forceVector = new Vector3 (5500, powerY * 0.1f, powerZ * -1);
 				}
 
 		if (currentPoint >= 5 && currentPoint <= 9) {
