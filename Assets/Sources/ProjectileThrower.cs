@@ -129,7 +129,7 @@ public class ProjectileThrower : MonoBehaviour
 		int index = bulletPool[_currentProjectileIndex];
 
 		currentPoint = nextPoint;
-		nextPoint = (int)Random.Range (0, 24);
+		nextPoint = (int)Random.Range (15, 16);
 		
 		if (currentPoint == -1)
 			currentPoint = nextPoint;

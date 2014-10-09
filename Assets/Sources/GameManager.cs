@@ -53,14 +53,22 @@ public class GameManager : MonoBehaviour
 	private int sequence=0; //첫번째 물체를 맞추었나? 두번째 물체를 맞추었나? 세번째 물체를 맞추었나?
 	public Material feverSkyBox;
 	public Material basicSkyBox;
-	public Light Dlight;
+
+	public Light spotLight1;
+	public Light spotLight2;
+	public Light spotLight3;
+	public Light spotLight4;
+	public Light spotLight5;
+	public Light spotLight6;
+
 	public GameObject[] feverParticle;
-	//public GameObject backGround;
 	public GUITexture feverTimeText;
 
 	float time;
 	float feverTime;
-	float startTime; // 안쓰면삭제 
+	float startTime; 
+	private float sLightTime;
+
 
 	private bool isFeverTime;
 	public void setFeverTime(bool isfevertime){
@@ -277,41 +285,7 @@ public class GameManager : MonoBehaviour
 
 		return calorie;
 	}
-
-
-/*	public void showCalorie(int score)
-	{
-       
-	   {
-			firstCalorie=score;
-			GUI_firstCalorie.text = score.ToString();
-			sequence++;
-			 if (sequence == 1)
-			 {
-
-				secondCalorie=firstCalorie;
-			 }
-			 if(sequence == 2)
-			{
-
-				GUI_secondCalorie.text = secondCalorie.ToString();
-				thirdCalorie=secondCalorie;
-				secondCalorie=firstCalorie;
-
-
-			}
-			if(sequence >=3)
-			{
-				GUI_secondCalorie.text = secondCalorie.ToString();
-				GUI_thirdCalorie.text = thirdCalorie.ToString();
-				thirdCalorie=secondCalorie;
-				secondCalorie=firstCalorie;
-			}
-
-	   }
-	}*/
-
-
+	
 	public void CheckFoodCrash(int FoodID)
 	{
 		NumberOfCollision [FoodID] += 1;
@@ -436,12 +410,24 @@ public class GameManager : MonoBehaviour
 		{
 			//backGround.renderer.enabled=false;
 			RenderSettings.skybox=feverSkyBox;
-			Dlight.color=Color.yellow;
-			Dlight.intensity=3.8f;
+
+			spotLight1.intensity=5;
+			spotLight3.intensity=5;
+			spotLight5.intensity=5;
+			spotLight2.intensity=5;
+			spotLight4.intensity=5;
+			spotLight6.intensity=5;
+			spotLight1.color=Color.magenta;
+			spotLight4.color=Color.green;
+			spotLight5.color=Color.magenta;
+			spotLight2.color=Color.yellow;
+			spotLight3.color=Color.red;
+			spotLight6.color=Color.cyan;
+
 			ProjectileThrower.getInstance().setWaitTime(0.2f);
 
 
-			for(int i=0; i<14; i++)
+			for(int i=0; i<13; i++)
 			{
 				feverParticle[i].renderer.enabled = true;
 				feverParticle[i].particleSystem.Play();
@@ -465,6 +451,53 @@ public class GameManager : MonoBehaviour
 			}
 			else
 				feverTimeText.enabled=false;
+
+			/////
+			sLightTime +=Time.deltaTime;
+			if(sLightTime<=0.05f)
+			{
+				Debug.Log ("ya");
+				/*if(spotLight1.intensity==0)
+				{
+					spotLight1.intensity=8;
+					spotLight3.intensity=8;
+					spotLight5.intensity=8;
+					spotLight2.intensity=0;
+					spotLight4.intensity=0;
+					spotLight6.intensity=0;
+				}
+				else if(spotLight2.intensity==0)
+				{
+					spotLight1.intensity=0;
+					spotLight3.intensity=0;
+					spotLight5.intensity=0;
+					spotLight2.intensity=8;
+					spotLight4.intensity=8;
+					spotLight6.intensity=8;
+				}*/
+				if(spotLight1.color==Color.magenta)
+				{
+					spotLight1.color=Color.yellow;
+					spotLight4.color=Color.red;
+					spotLight5.color=Color.cyan;
+					spotLight2.color=Color.magenta;
+					spotLight3.color=Color.green;
+					spotLight6.color=Color.magenta;
+				}
+				else if(spotLight1.color==Color.yellow)
+				{
+					spotLight1.color=Color.magenta;
+					spotLight4.color=Color.green;
+					spotLight5.color=Color.magenta;
+					spotLight2.color=Color.yellow;
+					spotLight3.color=Color.red;
+					spotLight6.color=Color.cyan;
+				}
+			}
+			else if(sLightTime>=0.1f)
+				sLightTime=0;
+			/////
+
 		}
 
 		if (feverTime >= 5.0f && feverTime <=5.3f) 
@@ -477,11 +510,16 @@ public class GameManager : MonoBehaviour
 			isFirst=true;
 			ProjectileThrower.getInstance().setWaitTime(0.4f);
 
-			Dlight.color=Color.white;
-			Dlight.intensity=0.5f;
 
-			for(int i=0; i<14; i++)
+			for(int i=0; i<13; i++)
 				feverParticle[i].renderer.enabled=false;
+
+			spotLight1.intensity=0;
+			spotLight3.intensity=0;
+			spotLight5.intensity=0;
+			spotLight2.intensity=0;
+			spotLight4.intensity=0;
+			spotLight6.intensity=0;
 		}
 
 		////////////
