@@ -36,11 +36,14 @@ public class CalorieFoodObject : MonoBehaviour
 	{
 		if (!collision.collider.tag.Equals("Non-Explosion"))
 		{
-			if(foodId==12)
-				GameManager.getInstance().setFeverTime(true);
+			if (foodId == 12) // FeverTime
+				GameManager.getInstance().startFeverTime();
+
+			if (foodId == 11) // Bomb
+				EVAction.run(Camera.main.gameObject);
 
 			GameObject obj = (GameObject)Instantiate (consumeParticle, transform.position, Quaternion.identity);
-			Destroy(obj, 1);
+			Destroy(obj, 3);
 
 			AudioSource.PlayClipAtPoint(consumeAudio, transform.position, 1.0f);
 			showFoodCalorie();

@@ -3,8 +3,6 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour 
 {
-	private const float PLAY_TIME = 30.0f;
-
 	enum GameState {
 		IDLE, 
 		OPENING, 
@@ -14,7 +12,9 @@ public class GameManager : MonoBehaviour
 		ENDING, 
 		RESULT,
 	}
-	
+
+	public int playTime = 60;
+
 	public GameObject gameUILayer;
 	public GameObject resultUILayer;
 	public GameObject pauseUILayer;
@@ -31,10 +31,10 @@ public class GameManager : MonoBehaviour
 	public GameModule resultModule;
 	public GameModule pauseModule;
 	public GameModule openingModule;
+	public GameModule endingModule;
 
 	public GUIText timer;  //타이머 텍스트 
 
-	/// <summary>
 	public int[] foodIdArray;  //발사할 음식 인덱스 배열 
 	public int [] NumberOfCollision;
 
@@ -66,19 +66,34 @@ public class GameManager : MonoBehaviour
 
 	float time;
 	float feverTime;
-	float startTime; 
+	float startTime;
 	private float sLightTime;
-
-
+	private Vector3 startFeverTextScale;
+	
 	private bool isFeverTime;
-	public void setFeverTime(bool isfevertime){
-		isFeverTime = isfevertime;
+
+	public void startFeverTime()
+	{
+		startFeverTextScale = feverTimeText.transform.localScale;
+
+		EVAction.run (feverTimeText.gameObject);
+
+		feverTimeText.enabled = true;
+		isFeverTime = true;
 	}
+
+	public void stopFeverTime()
+	{
+		feverTimeText.transform.localScale = startFeverTextScale;
+
+		feverTimeText.enabled = false;
+		isFeverTime = false;
+	}
+
 	public bool IsFeverTime {
 		get { return isFeverTime; }
 	}
 	private bool isFirst=true;
-	/// <summary>
 
 	public Transform[] projectiles;
 
@@ -186,7 +201,6 @@ public class GameManager : MonoBehaviour
 				foodNum3=0;
 
 			GUI_Calorie[foodNum3].text = score.ToString();
-
 		}
 	}
 
@@ -205,8 +219,9 @@ public class GameManager : MonoBehaviour
 		textCombo.enabled = true;
 		textureCombo.enabled = true;
 
-		EVAction.run (textCombo.gameObject);
-		EVAction.run (textureCombo.gameObject);
+		GUIScaleAction action = textureCombo.GetComponent<GUIScaleAction> ();
+		action.from = 1.5f + (currentCombo * 0.2f);
+		action.run ();
 
 		textCombo.text = currentCombo.ToString();
 
@@ -400,10 +415,10 @@ public class GameManager : MonoBehaviour
 				//RenderSettings.skybox=skyBox;
 				//feverParticle[0].renderer.enabled = true;
 			}
-			if (time >= PLAY_TIME) {
+
+			if (time >= playTime) {
 				finishGame ();
 			}
-
 		}
 
 		if(isFeverTime==true && isFirst == true)
@@ -438,25 +453,28 @@ public class GameManager : MonoBehaviour
 
 		if (isFeverTime == true) 
 		{
+
 			feverTime += Time.deltaTime;
 
-			if(feverTime<=0.5f)
+			/*
+			if(feverTime <= 1.0f)
 			{
-				feverTimeText.enabled=true;
-				Vector3 startPoint = new Vector3 (transform.lossyScale.x*0.2f,transform.lossyScale.y*0.2f);
-				Vector3 firstPoint = new Vector3 (transform.lossyScale.x*0.4f, transform.lossyScale.y*0.4f);
-				float fracComplete = (Time.time - startTime) / 0.4f;
+				feverTimeText.enabled = true;
 
-				feverTimeText.transform.localScale=Vector3.Slerp (startPoint,firstPoint,fracComplete);
+				Vector3 startPoint = new Vector3 (startFeverTextScale.x*0.0f,startFeverTextScale.y*0.0f);
+				Vector3 firstPoint = new Vector3 (startFeverTextScale.x*2.5f, startFeverTextScale.y*2.5f);
+				float fracComplete = (Time.time - startTime) / 1.0f;
+
+				feverTimeText.transform.localScale = Vector3.Slerp (startPoint,firstPoint,fracComplete);
 			}
 			else
 				feverTimeText.enabled=false;
+			*/
 
 			/////
 			sLightTime +=Time.deltaTime;
 			if(sLightTime<=0.05f)
 			{
-				Debug.Log ("ya");
 				/*if(spotLight1.intensity==0)
 				{
 					spotLight1.intensity=8;
@@ -502,7 +520,7 @@ public class GameManager : MonoBehaviour
 
 		if (feverTime >= 5.0f && feverTime <=5.3f) 
 		{
-			isFeverTime = false;
+			stopFeverTime();
 			//backGround.renderer.enabled=true;
 			RenderSettings.skybox=basicSkyBox;
 
@@ -647,7 +665,8 @@ public class GameManager : MonoBehaviour
 		startGame();
 	}
 
-	
+
+	/** 구버전 오프닝 코드. 현재는 GameModule로 오프닝과 엔딩을 처리. */
 	IEnumerator runOpeningAction(int actionIndex)
 	{
 		float delay = 1.0f;
@@ -674,9 +693,10 @@ public class GameManager : MonoBehaviour
 	}
 
 
+	/** 구버전 엔딩 코드. 현재는 GameModule로 오프닝과 엔딩을 처리. */
 	IEnumerator runEndingAction(int actionIndex)
 	{
-		float delay = 1.0f;
+		float delay = 3.0f;
 		bool finished = false;
 		
 		switch (actionIndex) {
@@ -714,9 +734,15 @@ public class GameManager : MonoBehaviour
 
 
 	private void playEnding()
-	{
-		int actionIndex = 0;
-		StartCoroutine("runEndingAction", actionIndex);
+	{	
+		if (endingModule != null) {
+			endingModule.OnFinished = new GameModule.OnFinishedDelegate(onEndingFinished);
+			endingModule.start();
+			
+		} else {
+			int actionIndex = 0;
+			StartCoroutine("runEndingAction", actionIndex);
+		}
 	}
 
 
@@ -802,7 +828,6 @@ public class GameManager : MonoBehaviour
 			break;
 			
 		case GameState.RESULT:
-			RenderSettings.ambientLight = Color.black;
 			startResultModule();
 			break;
 		}
@@ -882,7 +907,6 @@ public class GameManager : MonoBehaviour
 
 	private int calculateGrade(int score, float calorie)
 	{
-		// 임시로 등급을 SSS, SS, S, A, B, C, D, F 8단계로 구분
 		return (score / 3000);
 	}
 	

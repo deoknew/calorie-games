@@ -12,13 +12,12 @@ public abstract class EVAction : MonoBehaviour
 
 	public static void run(GameObject gameObject)
 	{
-		EVAction action = gameObject.GetComponent<EVAction>();
+		EVAction[] actions = gameObject.GetComponents<EVAction>();
 
-		if (action != null) {
-			if (action.isEnabled())
-				action.stop();
-
-			action.run();
+		foreach (EVAction action in actions) {
+			if (action != null) {
+				action.run();
+			}
 		}
 	}
 
@@ -26,6 +25,13 @@ public abstract class EVAction : MonoBehaviour
 	void Start()
 	{
 		enabled = false;
+
+		if (targetObjects.Length <= 0) {
+			if (gameObject != null) {
+				targetObjects = new GameObject[1];
+				targetObjects[0] = gameObject;
+			}
+		}
 	}
 
 
@@ -36,36 +42,52 @@ public abstract class EVAction : MonoBehaviour
 		float progress = _currentTime / duration;
 
 		foreach (GameObject target in targetObjects)
-			onAction(target, progress);
+			onAction (target, progress);
 
 		if (progress >= 1.0f)
 			stop ();
 	}
 
 
-	public virtual void run()
+	public GameObject getFirstTarget()
 	{
-		_currentTime = 0.0f;
-		enabled = true;
+		if (targetObjects.Length > 0)
+			return targetObjects[0];
+
+		return null;
 	}
 
 
-	public virtual void pause()
+	public void run()
+	{
+		if (isEnabled())
+			stop();
+
+		_currentTime = 0.0f;
+		enabled = true;
+
+		onStart ();
+	}
+
+
+	public void pause()
 	{
 		enabled = false;
 	}
 
 
-	public virtual void resume()
+	public void resume()
 	{
 		enabled = true;
 	}
 
 
-	public virtual void stop()
+	public void stop()
 	{
 		_currentTime = 0.0f;
 		enabled = false;
+
+		onStop ();
 	}
 
 
@@ -75,5 +97,7 @@ public abstract class EVAction : MonoBehaviour
 	}
 
 
+	public virtual void onStart() {}
+	public virtual void onStop() {}
 	public abstract void onAction(GameObject target, float progress);
 }

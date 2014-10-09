@@ -4,6 +4,7 @@ using System.Collections;
 public class ProjectileThrower : MonoBehaviour 
 {
 	private const string THROWING_POINT_NAME = "Point_Thrower";
+	private const int FIRST_SHOOT_POINT = 12;
 
 	public Transform shooter;
 	
@@ -44,14 +45,14 @@ public class ProjectileThrower : MonoBehaviour
 
 		Vector3[] sp = new Vector3[26];
 
-		for(int i=0,x=-60; i<5; i++)
+		for(int i=0,x=-50; i<5; i++)
 		{
 			for(int j=0,y=25; j<5; j++)
 			{
 				sp[i*5+j]= new Vector3 (startPoint.position.x+x,startPoint.position.y+y,startPoint.position.z);
 				y-=8;
 			}
-			x+=30;
+			x+=25;
 		}
 			
 		/*sp[0] = new Vector3 (startPoint.position.x-20.0f, startPoint.position.y+6.0f, startPoint.position.z);
@@ -123,16 +124,16 @@ public class ProjectileThrower : MonoBehaviour
 		int[] bulletPool = GameManager.getInstance ().foodIdArray; 
 		//Transform[] projectiles = GameManager.getInstance().projectiles;
 
-		const int MIN_TORQUE = 0;
-		const int MAX_TORQUE = 8;
+		const int MIN_TORQUE = 2;
+		const int MAX_TORQUE = 10;
 
 		int index = bulletPool[_currentProjectileIndex];
 
 		currentPoint = nextPoint;
-		nextPoint = (int)Random.Range (15, 16);
+		nextPoint = (int)Random.Range (0, 25);
 		
 		if (currentPoint == -1)
-			currentPoint = nextPoint;
+			currentPoint = FIRST_SHOOT_POINT;
 		
 		startShooterMoving ();
 
@@ -201,7 +202,7 @@ public class ProjectileThrower : MonoBehaviour
 		Vector3 targetPosition = Camera.main.transform.position;
 
 		targetPosition.x += Random.Range (-5.0f, 5.0f);
-		targetPosition.y += 5.0f;
+		targetPosition.y += 8.0f;
 		float power = Random.Range (40, 50);
 
 		fireToTarget (shootPosition, targetPosition, torqueVector, power, projectile);
@@ -245,8 +246,7 @@ public class ProjectileThrower : MonoBehaviour
 	{
 		if (shooterMoving) {
 			float fracComplete = (Time.time - startTime) / waitTime;
-			shooter.transform.position = Vector3.Slerp (shootPoints [currentPoint], shootPoints [nextPoint], fracComplete);
-
+			shooter.transform.position = Vector3.Slerp (shooter.transform.position, shootPoints [nextPoint], fracComplete);
 		}
 	}
 }

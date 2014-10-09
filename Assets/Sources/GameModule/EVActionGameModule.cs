@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class OpeningGameModule : GameModule
+public class EVActionGameModule : GameModule
 {
 	public EVActionGroup actionGroup;
 

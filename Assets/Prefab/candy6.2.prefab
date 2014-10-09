@@ -100,7 +100,7 @@ TrailRenderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: accdc472e45f04bd5bb8653fb67300e0, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -109,7 +109,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_Time: 1
-  m_StartWidth: 1
+  m_StartWidth: 2.5
   m_EndWidth: .100000001
   m_Colors:
     m_Color[0]:

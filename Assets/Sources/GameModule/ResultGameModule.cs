@@ -70,7 +70,7 @@ public class ResultGameModule : GameModule
 
 		if (resultBackground != null) {
 			if (_currentPosition > MAX_BG_POSITION) {
-				_currentPosition -= 0.05f;
+				_currentPosition -= 0.08f;
 				if (_currentPosition < MAX_BG_POSITION) {
 					_currentPosition = MAX_BG_POSITION;
 					showResult();
