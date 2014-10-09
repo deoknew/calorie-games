@@ -67,7 +67,7 @@ public class ResultGameModule : GameModule
 			
 			calorieText.text = string.Format("{0:F2}", _currentCalorie);
 		}
-		
+
 		if (resultBackground != null) {
 			if (_currentPosition > MAX_BG_POSITION) {
 				_currentPosition -= 0.05f;
@@ -104,11 +104,9 @@ public class ResultGameModule : GameModule
 			obj.layer = LayerMask.NameToLayer("GUI");
 			Destroy(obj, 2);
 		}
-	
-
+		
 		effectParticle.enabled = true;
 		effectParticle2.enabled = true;
-
 	}
 
 

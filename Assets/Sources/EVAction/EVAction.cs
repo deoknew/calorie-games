@@ -15,6 +15,9 @@ public abstract class EVAction : MonoBehaviour
 		EVAction action = gameObject.GetComponent<EVAction>();
 
 		if (action != null) {
+			if (action.isEnabled())
+				action.stop();
+
 			action.run();
 		}
 	}
@@ -40,26 +43,26 @@ public abstract class EVAction : MonoBehaviour
 	}
 
 
-	public void run()
+	public virtual void run()
 	{
 		_currentTime = 0.0f;
 		enabled = true;
 	}
 
 
-	public void pause()
+	public virtual void pause()
 	{
 		enabled = false;
 	}
 
 
-	public void resume()
+	public virtual void resume()
 	{
 		enabled = true;
 	}
 
 
-	public void stop()
+	public virtual void stop()
 	{
 		_currentTime = 0.0f;
 		enabled = false;

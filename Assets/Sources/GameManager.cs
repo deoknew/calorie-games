@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GameManager : MonoBehaviour 
 {
-	private const float PLAY_TIME = 10.0f;
+	private const float PLAY_TIME = 30.0f;
 
 	enum GameState {
 		IDLE, 
@@ -24,7 +24,8 @@ public class GameManager : MonoBehaviour
 	//
 	public GUIText [] GUI_Calorie;
 	//
-	public GUIText textCombo;  
+	public GUIText textCombo;
+	public GUITexture textureCombo;
 
 	public GameModule runningModule;
 	public GameModule resultModule;
@@ -177,6 +178,7 @@ public class GameManager : MonoBehaviour
 				foodNum3=0;
 
 			GUI_Calorie[foodNum3].text = score.ToString();
+
 		}
 	}
 
@@ -184,6 +186,7 @@ public class GameManager : MonoBehaviour
 	public void resetCombo()
 	{
 		textCombo.enabled = false;
+		textureCombo.enabled = false;
 		currentCombo = 0;
 	}
 
@@ -191,8 +194,13 @@ public class GameManager : MonoBehaviour
 	public void addCombo()
 	{
 		currentCombo++;
-		textCombo.enabled=true;
-		textCombo.text = currentCombo + " Combo";
+		textCombo.enabled = true;
+		textureCombo.enabled = true;
+
+		EVAction.run (textCombo.gameObject);
+		EVAction.run (textureCombo.gameObject);
+
+		textCombo.text = currentCombo.ToString();
 
 		if(currentCombo > currentMaxCombo)
 			currentMaxCombo = currentCombo;
@@ -364,9 +372,8 @@ public class GameManager : MonoBehaviour
 
 	void init()
 	{
-
 		//foodImage.enabled = false;
-		textCombo.enabled = false;
+		resetCombo ();
 		instance = this;
 	}
 
@@ -386,8 +393,8 @@ public class GameManager : MonoBehaviour
 		time = 0.0f;
 		feverTime = 0.0f;
 
-		if(ProjectileThrower.getInstance()!=null)
-			ProjectileThrower.getInstance ().InitK();
+		if(ProjectileThrower.getInstance() != null)
+			ProjectileThrower.getInstance ().reset();
 
 		timer.color = Color.white;
 		isFeverTime = false;
@@ -829,6 +836,9 @@ public class GameManager : MonoBehaviour
 		paramTable.Add("best_food", bestFoodIndex);
 		
 		resultModule.start(paramTable);
+
+		if (KinectManager.Instance != null)
+			KinectManager.Instance.DisplayColorMap = false;
 	}
 
 
