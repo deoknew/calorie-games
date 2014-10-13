@@ -1,7 +1,8 @@
 fileFormatVersion: 2
 guid: 8f9405962a9ac1048b2f55ebbfdbc4bc
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: cake
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

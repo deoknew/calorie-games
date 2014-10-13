@@ -1,7 +1,8 @@
 fileFormatVersion: 2
 guid: e9eaa4c3354e4064d8563044f5d03259
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: hamegg
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

@@ -1,7 +1,8 @@
 fileFormatVersion: 2
 guid: b6f5b896c506889458e44d0abb6883cd
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: banana
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

@@ -1,7 +1,8 @@
 fileFormatVersion: 2
 guid: 972f357e2ad4354468d75e981450ac12
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: donut
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

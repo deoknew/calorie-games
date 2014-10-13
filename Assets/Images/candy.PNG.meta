@@ -1,7 +1,8 @@
 fileFormatVersion: 2
 guid: 0de31cf73a82f114c80b43cc1b9dcbf9
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: candy
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

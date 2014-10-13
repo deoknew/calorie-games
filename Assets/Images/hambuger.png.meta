@@ -1,7 +1,8 @@
 fileFormatVersion: 2
 guid: eee4ea13e58f80b4fb655cbdafd9ceb5
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: hambuger
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

@@ -1,7 +1,8 @@
 fileFormatVersion: 2
 guid: 6ad4d8fc467383c46b40c744aece93cd
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: waffle
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

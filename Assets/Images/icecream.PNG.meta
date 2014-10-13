@@ -1,7 +1,8 @@
 fileFormatVersion: 2
 guid: 27f640b1cead0df4d93835193712fa45
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: icecream
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

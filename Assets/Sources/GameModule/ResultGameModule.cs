@@ -13,8 +13,13 @@ public class ResultGameModule : GameModule
 	public GameObject resultBackground;
 	public GameObject bestFoodParticle;
 	/// <summary>
+	public GameObject effectParticle1;
+	public GameObject effectParticle2;
+	public GameObject effectParticle3;
+	public GameObject effectParticle4;
+	public GameObject effectParticle5;
+	public GameObject effectParticle6;
 	public ParticleRenderer effectParticle;
-	public ParticleRenderer effectParticle2;
 
 	/// </summary>
 	private GameObject _bestFoodObject;
@@ -104,9 +109,21 @@ public class ResultGameModule : GameModule
 			obj.layer = LayerMask.NameToLayer("GUI");
 			Destroy(obj, 2);
 		}
-		
+
+		effectParticle1.renderer.enabled = true;
+		effectParticle1.particleSystem.Play ();
+		effectParticle2.renderer.enabled = true;
+		effectParticle2.particleSystem.Play ();
+		effectParticle3.renderer.enabled = true;
+		effectParticle3.particleSystem.Play ();
+		effectParticle4.renderer.enabled = true;
+		effectParticle4.particleSystem.Play ();
+		effectParticle5.renderer.enabled = true;
+		effectParticle5.particleSystem.Play ();
+		effectParticle6.renderer.enabled = true;
+		effectParticle6.particleSystem.Play ();
+
 		effectParticle.enabled = true;
-		effectParticle2.enabled = true;
 	}
 
 

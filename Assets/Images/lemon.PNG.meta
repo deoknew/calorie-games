@@ -1,7 +1,8 @@
 fileFormatVersion: 2
 guid: a0c5264074c469c4ead4793bf29eea79
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: lemon
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
