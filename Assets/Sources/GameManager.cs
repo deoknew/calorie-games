@@ -64,6 +64,8 @@ public class GameManager : MonoBehaviour
 	public GameObject[] feverParticle;
 	public GUITexture feverTimeText;
 
+	private Hashtable _foodImageCache;
+
 	float time;
 	float feverTime;
 	float startTime;
@@ -154,28 +156,22 @@ public class GameManager : MonoBehaviour
 
 	public void showFoodImage(string imageName)
 	{
-		string texturePath = "file://" + Application.dataPath + "\\Images\\" + imageName;
-		WWW textureLoad = new WWW (texturePath);
+		Texture foodTexture = (Texture)_foodImageCache[imageName];
+
+		if (foodTexture == null)
+			return;
 
 		startTime = Time.time;
 
-		if (sequence == 1) 
-		{
-			foodImage[0].GetComponent<GUITexture> ().texture = textureLoad.texture;
-		}
-		if(sequence == 2)
-		{
-			foodImage[1].GetComponent<GUITexture>().texture = textureLoad.texture;
-		}
-		if(sequence == 3)
-		{
-			foodImage[2].GetComponent<GUITexture>().texture = textureLoad.texture;
-		}
-		if(sequence >= 4)
-		{
-			foodImage[foodNum3].GetComponent<GUITexture> ().texture = textureLoad.texture;
+		if (sequence < 4) {
+			foodImage[sequence-1].GetComponent<GUITexture> ().texture = foodTexture;
+
+		} else {
+			foodImage[foodNum3].GetComponent<GUITexture> ().texture = foodTexture;
 		}
 	}
+
+
 	public void showCalorie(int score)
 	{
 		sequence++;
@@ -359,11 +355,27 @@ public class GameManager : MonoBehaviour
 	}
 
 
-	void init()
+	private void init()
 	{
-		//foodImage.enabled = false;
-		resetCombo ();
 		instance = this;
+
+		loadFoodImages();
+	}
+
+
+	private void loadFoodImages()
+	{
+		if (_foodImageCache == null)
+			_foodImageCache = new Hashtable();
+
+		foreach (Transform obj in projectiles) {
+			CalorieFoodObject foodObject = obj.gameObject.GetComponent<CalorieFoodObject>();
+
+			string texturePath = "file://" + Application.dataPath + "\\Images\\" + foodObject.imageName;
+			WWW textureLoad = new WWW (texturePath);
+
+			_foodImageCache.Add (foodObject.imageName, textureLoad.texture);
+		}
 	}
 
 
@@ -387,6 +399,8 @@ public class GameManager : MonoBehaviour
 
 		timer.color = Color.white;
 		isFeverTime = false;
+
+		resetCombo ();
 	}
 
 	

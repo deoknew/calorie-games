@@ -22,6 +22,18 @@ public abstract class EVAction : MonoBehaviour
 	}
 
 
+	public static void stop(GameObject gameObject)
+	{
+		EVAction[] actions = gameObject.GetComponents<EVAction>();
+		
+		foreach (EVAction action in actions) {
+			if (action != null) {
+				action.stop();
+			}
+		}
+	}
+
+
 	void Start()
 	{
 		enabled = false;
