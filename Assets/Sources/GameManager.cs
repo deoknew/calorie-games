@@ -62,9 +62,10 @@ public class GameManager : MonoBehaviour
 	public Light spotLight6;
 
 	public GameObject[] feverParticle;
-	public GUITexture feverTimeText;
 
+	public GUITexture feverTimeText;
 	private Hashtable _foodImageCache;
+
 
 	float time;
 	float feverTime;
@@ -434,10 +435,14 @@ public class GameManager : MonoBehaviour
 				finishGame ();
 			}
 		}
+		///////////////////////
 
 		if(isFeverTime==true && isFirst == true)
 		{
-			//backGround.renderer.enabled=false;
+			/////////////
+	
+			//////////////////
+
 			RenderSettings.skybox=feverSkyBox;
 
 			spotLight1.intensity=5;
