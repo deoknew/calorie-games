@@ -15,7 +15,7 @@ public class ShakingAction : EVAction
 	{
 		base.onStart ();
 
-		_startPosition = getFirstTarget().transform.position;
+		_startPosition = targetObject.transform.position;
 		_shakingData = new Vector3[MAX_SHAKING_FRAME];
 
 		Vector3 vector;
@@ -56,7 +56,7 @@ public class ShakingAction : EVAction
 	{
 		base.onStop ();
 
-		getFirstTarget ().transform.position = _startPosition;
+		targetObject.transform.position = _startPosition;
 	}
 
 

@@ -3,13 +3,19 @@ using System.Collections;
 
 public class EVActionGameModule : GameModule
 {
-	public EVActionGroup actionGroup;
+	public EVAction[] actions;
+
+	private int _currentIndex;
 
 	
 	protected override void onStart()
 	{
-		EVActionGroup.onFinished handler = new EVActionGroup.onFinished(onPlayerFinished);
-		actionGroup.run(handler);
+		_currentIndex = 0;
+
+		if (actions != null && actions.Length > 0)
+			runAction(_currentIndex);
+		else
+			onModuleFinished();
 	}
 
 
@@ -25,8 +31,27 @@ public class EVActionGameModule : GameModule
 	}
 
 
-	public void onPlayerFinished()
+	private void onActionFinished()
+	{
+		_currentIndex++;
+
+		if (_currentIndex < actions.Length) {
+			runAction(_currentIndex);
+		} else {
+			onModuleFinished();
+		}
+	}
+
+
+	private void onModuleFinished()
 	{
 		finish ();
+	}
+
+
+	private void runAction(int index)
+	{
+		EVAction.onFinished handler = new EVAction.onFinished(onActionFinished);
+		EVAction.invoke(actions[index].gameObject, handler);
 	}
 }

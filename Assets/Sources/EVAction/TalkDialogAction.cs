@@ -19,7 +19,7 @@ public class TalkDialogAction : EVAction
 			if (nameText != null && nameText.Length > 0) {
 				nameGUIText.text = nameText;
 
-				EVAction.run(nameGUIText.gameObject);
+				EVAction.invoke(nameGUIText.gameObject);
 			}
 		}
 
@@ -27,7 +27,7 @@ public class TalkDialogAction : EVAction
 			if (talkText != null && talkText.Length > 0) {
 				talkGUIText.text = talkText;
 
-				EVAction.run(talkGUIText.gameObject);
+				EVAction.invoke(talkGUIText.gameObject);
 			}
 		}
 
@@ -35,12 +35,12 @@ public class TalkDialogAction : EVAction
 			if (portraitSprite != null) {
 				portraitGUITexture.texture = portraitSprite.texture;
 
-				EVAction.run(portraitGUITexture.gameObject);
+				EVAction.invoke(portraitGUITexture.gameObject);
 			}
 		}
 
 		if (bgGUITexture != null) {
-			EVAction.run(bgGUITexture.gameObject);
+			EVAction.invoke(bgGUITexture.gameObject);
 		}
 	}
 
@@ -48,22 +48,22 @@ public class TalkDialogAction : EVAction
 	public override void onStop()
 	{
 		if (nameGUIText != null) {
-			EVAction.stop(nameGUIText.gameObject);
+			EVAction.interrupt(nameGUIText.gameObject);
 			nameGUIText.enabled = false;
 		}
 		
 		if (talkGUIText != null) {
-			EVAction.stop(talkGUIText.gameObject);
+			EVAction.interrupt(talkGUIText.gameObject);
 			talkGUIText.enabled = false;
 		}
 		
 		if (portraitGUITexture != null) {
-			EVAction.stop(portraitGUITexture.gameObject);
+			EVAction.interrupt(portraitGUITexture.gameObject);
 			portraitGUITexture.enabled = false;
 		}
 		
 		if (bgGUITexture != null) {
-			EVAction.stop(bgGUITexture.gameObject);
+			EVAction.interrupt(bgGUITexture.gameObject);
 			bgGUITexture.enabled = false;
 		}
 	}

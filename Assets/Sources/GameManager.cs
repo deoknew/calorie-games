@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
 	{
 		startFeverTextScale = feverTimeText.transform.localScale;
 
-		EVAction.run (feverTimeText.gameObject);
+		EVAction.invoke (feverTimeText.gameObject);
 
 		feverTimeText.enabled = true;
 		isFeverTime = true;
@@ -217,7 +217,7 @@ public class GameManager : MonoBehaviour
 
 		GUIScaleAction action = textureCombo.GetComponent<GUIScaleAction> ();
 		action.from = 1.5f + (currentCombo * 0.2f);
-		action.run ();
+		EVAction.invoke(textureCombo.gameObject);
 
 		textCombo.text = currentCombo.ToString();
 
@@ -699,7 +699,6 @@ public class GameManager : MonoBehaviour
 			onOpeningFinished();
 			yield break;
 		}
-
 		else {
 			yield return new WaitForSeconds(delay);
 			StartCoroutine("runOpeningAction", ++actionIndex);

@@ -40,7 +40,7 @@ public class CalorieFoodObject : MonoBehaviour
 				GameManager.getInstance().startFeverTime();
 
 			if (foodId == 11) // Bomb
-				EVAction.run(Camera.main.gameObject);
+				EVAction.invoke(Camera.main.gameObject);
 
 			GameObject obj = (GameObject)Instantiate (consumeParticle, transform.position, Quaternion.identity);
 			Destroy(obj, 3);
