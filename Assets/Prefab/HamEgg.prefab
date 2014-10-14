@@ -140,7 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc1ac573fc861a24081b004cddb17b6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  consumeAudio: {fileID: 8300000, guid: 32e9cd68366245043ae7cafddb2b8aec, type: 3}
+  consumeAudio: {fileID: 8300000, guid: 969d593dece33134993ad74149b28338, type: 3}
   consumeParticle: {fileID: 100000, guid: 8d848b5d9c8284a47abf13f219e8a707, type: 2}
   calorie: 260
   foodId: 4

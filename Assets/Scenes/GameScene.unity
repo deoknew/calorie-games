@@ -64910,7 +64910,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shooter: {fileID: 152479417}
-  throwAudio: {fileID: 8300000, guid: 0f03f37637815ad48a4427302d8ebf02, type: 3}
+  throwAudio: {fileID: 8300000, guid: bd75bc552b5fe2749970f5279af16365, type: 3}
   throwEffect: {fileID: 0}
   throwRate: .5
 --- !u!1 &1734443163
