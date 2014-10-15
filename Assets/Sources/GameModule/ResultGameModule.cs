@@ -21,6 +21,8 @@ public class ResultGameModule : GameModule
 	public GameObject effectParticle6;
 	public ParticleRenderer effectParticle;
 
+	public AudioClip finishAudio;
+
 	/// </summary>
 	private GameObject _bestFoodObject;
 
@@ -39,6 +41,10 @@ public class ResultGameModule : GameModule
 	protected override void onStart()
 	{
 		_currentPosition = resultBackground.transform.position.y;
+
+		if (finishAudio != null) {
+			AudioSource.PlayClipAtPoint(finishAudio, transform.position, 1.0f);
+		}
 	}
 	
 	

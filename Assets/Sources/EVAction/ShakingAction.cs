@@ -11,9 +11,9 @@ public class ShakingAction : EVAction
 	private Vector3[] _shakingData;
 
 
-	public override void onStart ()
+	public override void onStart (GameObject target)
 	{
-		base.onStart ();
+		base.onStart (target);
 
 		_startPosition = targetObject.transform.position;
 		_shakingData = new Vector3[MAX_SHAKING_FRAME];
@@ -52,11 +52,11 @@ public class ShakingAction : EVAction
 	}
 
 
-	public override void onStop ()
+	public override void onStop (GameObject target)
 	{
-		base.onStop ();
+		base.onStop (target);
 
-		targetObject.transform.position = _startPosition;
+		target.transform.position = _startPosition;
 	}
 
 

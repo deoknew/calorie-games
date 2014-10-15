@@ -6,29 +6,29 @@ public class TalkAction : EVAction
 	private string _startText;
 
 
-	public override void onStart ()
+	public override void onStart (GameObject target)
 	{
-		base.onStart ();
+		base.onStart (target);
 
-		if (targetObject.guiText != null) {
+		if (target.guiText != null) {
 			_startText = targetObject.guiText.text;
-			targetObject.guiText.enabled = false;
+			target.guiText.enabled = false;
 		}
 	}
 
 
-	public override void onStop ()
+	public override void onStop (GameObject target)
 	{
-		base.onStop ();
+		base.onStop (target);
 
-		if (targetObject.guiText != null)
-			targetObject.guiText.text = _startText;
+		if (target.guiText != null)
+			target.guiText.text = _startText;
 	}
 
 
 	public override void onAction(GameObject target, float progress)
 	{
-		if (targetObject.guiText == null)
+		if (target.guiText == null)
 			return;
 
 		string talkText = _startText;
@@ -37,9 +37,6 @@ public class TalkAction : EVAction
 			return;
 
 		int textLength = (int)(talkText.Length * progress);
-		targetObject.guiText.text = talkText.Substring(0, textLength);
-
-		if (!targetObject.guiText.enabled)
-			targetObject.guiText.enabled = true;
+		target.guiText.text = talkText.Substring(0, textLength);
 	}
 }

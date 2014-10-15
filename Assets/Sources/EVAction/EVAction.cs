@@ -7,8 +7,8 @@ public abstract class EVAction : MonoBehaviour
 	public float duration;
 	public bool wait;
 
-	private float _currentTime;
-	private onFinished _finishHandler;
+	protected float _currentTime;
+	protected onFinished _finishHandler;
 
 	
 	public static void invoke(GameObject gameObject)
@@ -27,7 +27,9 @@ public abstract class EVAction : MonoBehaviour
 		if (actions.Length > 0) {
 			EVAction action = actions[0];
 
-			action.setOnFinished(finishHandler);
+			if (finishHandler != null)
+				action.setOnFinished(finishHandler);
+
 			action.startActions(actions);
 		}
 	}
@@ -79,7 +81,7 @@ public abstract class EVAction : MonoBehaviour
 		_currentTime = 0.0f;
 		enabled = true;
 		
-		onStart ();
+		onStart (targetObject);
 	}
 
 
@@ -88,7 +90,7 @@ public abstract class EVAction : MonoBehaviour
 		_currentTime = 0.0f;
 		enabled = false;
 		
-		onStop ();
+		onStop (targetObject);
 	}
 	
 
@@ -163,8 +165,8 @@ public abstract class EVAction : MonoBehaviour
 	}
 
 
-	public virtual void onStart() {}
-	public virtual void onStop() {}
+	public virtual void onStart(GameObject target) {}
+	public virtual void onStop(GameObject target) {}
 	public abstract void onAction(GameObject target, float progress);
 
 	public delegate void onFinished();

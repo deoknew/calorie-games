@@ -12,12 +12,12 @@ public class GUIScaleAction : EVAction
 	private object _startSize;
 
 
-	public override void onStart()
+	public override void onStart(GameObject target)
 	{
-		base.onStart();
+		base.onStart(target);
 		
-		GUIText text = targetObject.guiText;
-		GUITexture texture = targetObject.guiTexture;
+		GUIText text = target.guiText;
+		GUITexture texture = target.guiTexture;
 
 		if (text != null) {
 			_startSize = text.fontSize.ToString();
@@ -31,15 +31,15 @@ public class GUIScaleAction : EVAction
 	}
 
 
-	public override void onStop ()
+	public override void onStop (GameObject target)
 	{
-		base.onStop ();
+		base.onStop (target);
 
 		if (_startSize == null)
 			return;
 
-		GUITexture texture = targetObject.guiTexture;
-		GUIText text = targetObject.guiText;
+		GUITexture texture = target.guiTexture;
+		GUIText text = target.guiText;
 		
 		if (texture != null) {
 			if (_startSize != null) {
@@ -59,8 +59,8 @@ public class GUIScaleAction : EVAction
 
 	public override void onAction(GameObject target, float progress)
 	{
-		GUITexture texture = targetObject.guiTexture;
-		GUIText text = targetObject.guiText;
+		GUITexture texture = target.guiTexture;
+		GUIText text = target.guiText;
 
 		float value = Mathf.Lerp (from, to, progress);
 

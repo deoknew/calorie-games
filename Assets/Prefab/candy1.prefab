@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   consumeAudio: {fileID: 8300000, guid: 969d593dece33134993ad74149b28338, type: 3}
-  consumeParticle: {fileID: 100000, guid: 252d3e10aa8414958a2b01cdd099aa32, type: 2}
+  consumeParticle: {fileID: 100000, guid: 1fd2a2a15653d4d2daab95e180d0dadb, type: 2}
   calorie: 500
   foodId: 13
   imageName: candy.png

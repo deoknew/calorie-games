@@ -43,8 +43,29 @@ public class ProjectileThrower : MonoBehaviour
 		currentPoint = -1;
 		nextPoint = -1;
 
-		Vector3[] sp = new Vector3[26];
+		while(true){
+			yield return new WaitForSeconds(waitTime);
 
+			if(GameManager.getInstance().isGameRunning()) {
+				if (shootPoints == null)
+					shootPoints = generateShootPoints();
+
+				fireBullet ();
+			}
+		}
+	}
+
+
+	public void reset()
+	{
+		_currentProjectileIndex = 0;
+	}
+
+
+	private Vector3[] generateShootPoints()
+	{
+		Vector3[] sp = new Vector3[26];
+		
 		for(int i=0,x=-50; i<5; i++)
 		{
 			for(int j=0,y=25; j<5; j++)
@@ -54,51 +75,7 @@ public class ProjectileThrower : MonoBehaviour
 			}
 			x+=25;
 		}
-			
-		/*sp[0] = new Vector3 (startPoint.position.x-20.0f, startPoint.position.y+6.0f, startPoint.position.z);
-		sp[1] = new Vector3 (startPoint.position.x-20.0f, startPoint.position.y+3.0f, startPoint.position.z);                                                                                                                                                                                                                                                                                                                                                                                                                  
-		sp[2] = new Vector3 (startPoint.position.x-20.0f, startPoint.position.y, startPoint.position.z);
-		sp[3] = new Vector3 (startPoint.position.x-20.0f, startPoint.position.y-3.0f, startPoint.position.z);
-		sp[4] = new Vector3 (startPoint.position.x-20.0f, startPoint.position.y-6.0f, startPoint.position.z);
-
-		sp[5] = new Vector3 (startPoint.position.x-10.0f, startPoint.position.y+6.0f, startPoint.position.z);
-		sp[6] = new Vector3 (startPoint.position.x-10.0f, startPoint.position.y+3.0f, startPoint.position.z);
-		sp[7] = new Vector3 (startPoint.position.x-10.0f, startPoint.position.y, startPoint.position.z);
-		sp[8] = new Vector3 (startPoint.position.x-10.0f, startPoint.position.y-3.0f, startPoint.position.z);
-		sp[9] = new Vector3 (startPoint.position.x-10.0f, startPoint.position.y-6.0f, startPoint.position.z);
-
-		sp[10] = new Vector3 (startPoint.position.x, startPoint.position.y+6.0f, startPoint.position.z);
-		sp[11] = new Vector3 (startPoint.position.x, startPoint.position.y+3.0f, startPoint.position.z);
-		sp[12] = startPoint.position;
-		sp[13] = new Vector3 (startPoint.position.x, startPoint.position.y-3.0f, startPoint.position.z);
-		sp[14] = new Vector3 (startPoint.position.x, startPoint.position.y-6.0f, startPoint.position.z);
-
-		sp[15] = new Vector3 (startPoint.position.x+10.0f, startPoint.position.y+6.0f, startPoint.position.z);
-		sp[16] = new Vector3 (startPoint.position.x+10.0f, startPoint.position.y+3.0f, startPoint.position.z);
-		sp[17] = new Vector3 (startPoint.position.x+10.0f, startPoint.position.y, startPoint.position.z);
-		sp[18] = new Vector3 (startPoint.position.x+10.0f, startPoint.position.y-3.0f, startPoint.position.z);
-		sp[19] = new Vector3 (startPoint.position.x+10.0f, startPoint.position.y-6.0f, startPoint.position.z);
-	
-		sp[20] = new Vector3 (startPoint.position.x+18.0f, startPoint.position.y+6.0f, startPoint.position.z);
-		sp[21] = new Vector3 (startPoint.position.x+18.0f, startPoint.position.y+3.0f, startPoint.position.z);
-		sp[22] = new Vector3 (startPoint.position.x+18.0f, startPoint.position.y, startPoint.position.z);
-		sp[23] = new Vector3 (startPoint.position.x+18.0f, startPoint.position.y-3.0f, startPoint.position.z);
-		sp[24] = new Vector3 (startPoint.position.x+18.0f, startPoint.position.y-6.0f, startPoint.position.z);
-*/
-		shootPoints = sp;
-
-		while(true){
-			yield return new WaitForSeconds(waitTime);
-
-			if(GameManager.getInstance().isGameRunning()==true)
-				fireBullet ();
-		}
-	}
-
-
-	public void reset()
-	{
-		_currentProjectileIndex = 0;
+		return sp;
 	}
 
 	/*void Start () 

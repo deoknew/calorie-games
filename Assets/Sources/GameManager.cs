@@ -289,7 +289,7 @@ public class GameManager : MonoBehaviour
 	{
 		// 임시로 가정된 수치로 계산함
 
-		const float K = 0.000325f;
+		const float K = 0.000800f; //0.000325f << original
 		const float U = 0.1615f;
 
 		float calorie = 0.0f;
@@ -748,6 +748,9 @@ public class GameManager : MonoBehaviour
 			int actionIndex = 0;
 			StartCoroutine("runOpeningAction", actionIndex);
 		}
+
+		if (KinectManager.Instance != null)
+			KinectManager.Instance.DisplayColorMap = false;
 	}
 
 
@@ -830,6 +833,9 @@ public class GameManager : MonoBehaviour
 			}
 			
 			RenderSettings.ambientLight = Color.white;
+			if (KinectManager.Instance != null)
+				KinectManager.Instance.DisplayColorMap = true;
+
 			break;
 			
 		case GameState.PAUSE:
