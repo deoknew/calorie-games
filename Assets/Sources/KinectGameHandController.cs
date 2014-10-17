@@ -16,7 +16,7 @@ public class KinectGameHandController : KinectHandController
 
 	public override void onUpdateHand(Vector3 leftHandPos, Vector3 rightHandPos)
 	{
-		bool gameRunning = GameManager.getInstance().isGameRunning();
+		bool gameRunning = GameManager.Instance.isGameRunning();
 
 		setVisibleGameHands(gameRunning);
 
@@ -70,7 +70,7 @@ public class KinectGameHandController : KinectHandController
 				+ Mathf.Pow(Mathf.Abs(prevRightHandPosition.y - rightHandPos.y), 2.0f)
 			);
 
-		GameManager.getInstance().addMovingDistance(distance);
+		RunningGameModule.Instance.addMovingDistance(distance);
 
 		prevLeftHandPosition = leftHandPos;
 		prevRightHandPosition = rightHandPos;

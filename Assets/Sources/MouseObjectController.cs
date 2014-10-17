@@ -19,7 +19,7 @@ public class MouseObjectController : MonoBehaviour
 
 		//(!) 테스트를 위해 마우스로 이동한 거리도 전송
 
-		if (GameManager.getInstance().isGameRunning()) {
+		if (GameManager.Instance.isGameRunning()) {
 			if (prevPosition.magnitude == 0) {
 				prevPosition = objectPos;
 			}
@@ -29,7 +29,7 @@ public class MouseObjectController : MonoBehaviour
 				+ Mathf.Pow(Mathf.Abs(prevPosition.y - objectPos.y), 2.0f)
 			);
 
-			GameManager.getInstance().addMovingDistance(distance);
+			RunningGameModule.Instance.addMovingDistance(distance);
 
 			prevPosition = objectPos;
 		}

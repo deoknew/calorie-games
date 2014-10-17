@@ -46,7 +46,7 @@ public class ProjectileThrower : MonoBehaviour
 		while(true){
 			yield return new WaitForSeconds(waitTime);
 
-			if(GameManager.getInstance().isGameRunning()) {
+			if(GameManager.Instance.isGameRunning()) {
 				if (shootPoints == null)
 					shootPoints = generateShootPoints();
 
@@ -98,7 +98,7 @@ public class ProjectileThrower : MonoBehaviour
 
     void fireBullet()
     {
-		int[] bulletPool = GameManager.getInstance ().foodIdArray; 
+		int[] bulletPool = RunningGameModule.Instance.foodIdArray;
 		//Transform[] projectiles = GameManager.getInstance().projectiles;
 
 		const int MIN_TORQUE = 2;
@@ -169,12 +169,12 @@ public class ProjectileThrower : MonoBehaviour
 		for (int i = 0; i < 3; ++i)
 			torqueVector[i] = Random.Range(MIN_TORQUE, MAX_TORQUE);
 
-		if (GameManager.getInstance ().IsFeverTime) {
+		if (RunningGameModule.Instance.IsFeverTime) {
 			index = 13;
 			_currentProjectileIndex--;
 		}
 
-		Transform projectile = GameManager.getInstance().projectiles[index];
+		Transform projectile = RunningGameModule.Instance.projectiles[index];
 		Vector3 shootPosition = shootPoints[currentPoint];
 		Vector3 targetPosition = Camera.main.transform.position;
 

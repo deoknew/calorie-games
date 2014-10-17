@@ -7,12 +7,6 @@ public class KinectGUIHandler : MonoBehaviour
 	private bool _mouseInputMode;
 
 
-	void Start ()
-	{
-
-	}
-
-
 	void Update ()
 	{
 		if (KinectManager.Instance == null) {

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using EVGame.Action;
 
 public class CalorieFoodObject : MonoBehaviour
 {
@@ -24,9 +25,9 @@ public class CalorieFoodObject : MonoBehaviour
 
 	void Update() 
 	{
-		if (transform.position.z <= 2.5 || GameManager.getInstance().isGameFinished())
+		if (transform.position.z <= 2.5 || GameManager.Instance.isGameFinished())
 		{
-			GameManager.getInstance().resetCombo();
+			RunningGameModule.Instance.resetCombo();
 			Destroy (gameObject);
 		}
 	}
@@ -37,10 +38,10 @@ public class CalorieFoodObject : MonoBehaviour
 		if (!collision.collider.tag.Equals("Non-Explosion"))
 		{
 			if (foodId == 12) // FeverTime
-				GameManager.getInstance().startFeverTime();
+				RunningGameModule.Instance.startFeverTime();
 
 			if (foodId == 11) // Bomb
-				EVAction.invoke(Camera.main.gameObject);
+				GameAction.invoke(Camera.main.gameObject);
 
 			GameObject obj = (GameObject)Instantiate (consumeParticle, transform.position, Quaternion.identity);
 			Destroy(obj, 3);
@@ -61,30 +62,29 @@ public class CalorieFoodObject : MonoBehaviour
 
 	public void Combo()
 	{
-		GameManager.getInstance ().addCombo ();
+		RunningGameModule.Instance.addCombo ();
 	}
 
 
 	void showFoodImage()
 	{
-		GameManager.getInstance ().showFoodImage (imageName);
+		RunningGameModule.Instance.showFoodImage (imageName);
 	}
 
 
 	void showFoodCalorie()
 	{
-		GameManager.getInstance ().showCalorie (calorie);
-
+		RunningGameModule.Instance.showCalorie (calorie);
 	}
 
 
 	void consumeFood()
 	{
-		GameManager.getInstance().addScore(calorie);
+		RunningGameModule.Instance.addScore(calorie);
 	}
 	void CollsionFoodID()
 	{
-		GameManager.getInstance ().CheckFoodCrash (foodId);
+		RunningGameModule.Instance.CheckFoodCrash (foodId);
 
 	}
 

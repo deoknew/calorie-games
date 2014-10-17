@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -38,7 +38,7 @@ public class KinectCursorHandController : KinectHandController
 
 	public override void onUpdateHand(Vector3 leftHandPos, Vector3 rightHandPos)
 	{
-		if (!GameManager.getInstance().isGameResult())
+		if (!GameManager.Instance.isGameResult())
 			return;
 
 		if (false == isPlayerCalibrated()) {
