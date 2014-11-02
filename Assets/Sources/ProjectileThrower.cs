@@ -47,10 +47,12 @@ public class ProjectileThrower : MonoBehaviour
 			yield return new WaitForSeconds(waitTime);
 
 			if(GameManager.Instance.isGameRunning()) {
-				if (shootPoints == null)
-					shootPoints = generateShootPoints();
+				if (!RunningGameModule.Instance.isTutorialRunning()) {
+					if (shootPoints == null)
+						shootPoints = generateShootPoints();
 
-				fireBullet ();
+					fireBullet ();
+				}
 			}
 		}
 	}
@@ -204,6 +206,29 @@ public class ProjectileThrower : MonoBehaviour
 		obj.rigidbody.AddTorque (torqueVector);
 
 		obj.transform.localScale *= 2;
+	}
+
+
+	public void fireBulletForTutorial()
+	{
+		const int MIN_TORQUE = 2;
+		const int MAX_TORQUE = 10;
+
+		Transform projectile = RunningGameModule.Instance.projectiles[3];
+		Vector3 shootPosition = transform.position;
+		Vector3 targetPosition = Camera.main.transform.position;
+
+		Vector3 torqueVector = new Vector3();
+		for (int i = 0; i < 3; ++i)
+			torqueVector[i] = Random.Range(MIN_TORQUE, MAX_TORQUE);
+
+		targetPosition.x += Random.Range (-5.0f, 5.0f);
+		targetPosition.y += 8.0f;
+		float power = Random.Range (40, 50);
+
+		fireToTarget (shootPosition, targetPosition, torqueVector, power, projectile);
+
+		AudioSource.PlayClipAtPoint(throwAudio, startPoint.position, 1.0f);
 	}
 
 

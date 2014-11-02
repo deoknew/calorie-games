@@ -4,31 +4,28 @@ using EVGame.Action;
 
 public class CalorieFoodObject : MonoBehaviour
 {
+	private static int _prevFoodHash = 0;
+
 	public AudioClip consumeAudio;
 	public GameObject consumeParticle;
 
 	public int calorie;
 	public int foodId;
 	public string imageName;
-	
-	private static CalorieFoodObject instance;
-	
-	public static CalorieFoodObject getInstance() {
-		return instance;
-	}
-	void Start()
-	{
-
-		instance = this;		
-	}
 
 
 	void Update() 
 	{
-		if (transform.position.z <= 2.5 || GameManager.Instance.isGameFinished())
+		if (transform.position.y <= 1.5 || GameManager.Instance.isGameFinished())
 		{
 			RunningGameModule.Instance.resetCombo();
 			Destroy (gameObject);
+
+			if (RunningGameModule.Instance.isTutorialRunning()) {
+				//(!) 접근방법이 좋지 않음.
+				TutorialGameModule module = (TutorialGameModule)RunningGameModule.Instance.tutorialModule;
+				module.failedDefence();
+			}
 		}
 	}
 
@@ -47,46 +44,22 @@ public class CalorieFoodObject : MonoBehaviour
 			Destroy(obj, 3);
 
 			AudioSource.PlayClipAtPoint(consumeAudio, transform.position, 1.0f);
-			showFoodCalorie();
-			showFoodImage();
-
-			CollsionFoodID();
-			consumeFood();
-
-			Combo();
 		
+			// 양 손으로 동시에 충돌했을 때 중복처리를 방지하기 위함.
+			if (_prevFoodHash == GetHashCode())
+				return;
+			else
+				_prevFoodHash = GetHashCode();
+
+			if (false == RunningGameModule.Instance.isTutorialRunning()) {
+				RunningGameModule.Instance.onFoodDefenced(this);
+
+			} else {
+				//(!) 접근방법이 좋지 않음.
+				TutorialGameModule module = (TutorialGameModule)RunningGameModule.Instance.tutorialModule;
+				module.successDefence();
+			}
 		}
 		Destroy (gameObject);
 	}
-
-
-	public void Combo()
-	{
-		RunningGameModule.Instance.addCombo ();
-	}
-
-
-	void showFoodImage()
-	{
-		RunningGameModule.Instance.showFoodImage (imageName);
-	}
-
-
-	void showFoodCalorie()
-	{
-		RunningGameModule.Instance.showCalorie (calorie);
-	}
-
-
-	void consumeFood()
-	{
-		RunningGameModule.Instance.addScore(calorie);
-	}
-	void CollsionFoodID()
-	{
-		RunningGameModule.Instance.CheckFoodCrash (foodId);
-
-	}
-
-
 }

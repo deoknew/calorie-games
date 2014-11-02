@@ -14,7 +14,7 @@ namespace EVGame.Action
 			GUITexture texture = target.guiTexture;
 			GUIText text = target.guiText;
 			Renderer renderer = target.renderer;
-			
+
 			Color color = Color.Lerp(from, to, progress);
 			
 			if (texture != null)

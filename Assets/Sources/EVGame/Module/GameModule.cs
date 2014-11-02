@@ -16,6 +16,9 @@ namespace EVGame.Module
 		public OnFinishedDelegate OnFinished {
 			set { _onFinished = value; }
 		}
+
+		private bool _initialized;
+		private bool _pendingStart;
 		
 		
 		public bool isRunning()
@@ -26,7 +29,11 @@ namespace EVGame.Module
 		
 		void Start ()
 		{
+			_initialized = true;
 			enabled = false;
+
+			if (_pendingStart)
+				start ();
 		}
 		
 		
@@ -38,6 +45,11 @@ namespace EVGame.Module
 		
 		public void start()
 		{
+			if (false == _initialized) {
+				_pendingStart = true;
+				return;
+			}
+
 			enabled = true;
 			onStart ();
 		}

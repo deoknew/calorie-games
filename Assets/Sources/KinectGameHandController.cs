@@ -16,11 +16,17 @@ public class KinectGameHandController : KinectHandController
 
 	public override void onUpdateHand(Vector3 leftHandPos, Vector3 rightHandPos)
 	{
-		bool gameRunning = GameManager.Instance.isGameRunning();
+		bool handVisible = GameManager.Instance.isGameRunning();
 
-		setVisibleGameHands(gameRunning);
+		if (RunningGameModule.Instance == null)
+			return;
 
-		if (false == gameRunning)
+		if (RunningGameModule.Instance.isTutorialRunning() && !RunningGameModule.Instance.tutorialModule.enabled)
+			handVisible = false;
+
+		setVisibleGameHands(handVisible);
+
+		if (false == handVisible)
 			return;
 
 		leftHandPos.z *= -1;
@@ -29,8 +35,8 @@ public class KinectGameHandController : KinectHandController
 		leftHandPos *= JOINT_POSITION_MULTIPLIER;
 		rightHandPos *= JOINT_POSITION_MULTIPLIER;
 		
-		leftHandPos.z /= 2.0f;
-		rightHandPos.z /= 2.0f;
+		leftHandPos.z /= 3.0f;
+		rightHandPos.z /= 3.0f;
 		
 		Vector3 centerPos = centerPoint.position;
 		

@@ -8,6 +8,7 @@ namespace EVGame.Action
 		private const int MAX_SHAKING_FRAME = 5;
 		
 		public float shakingDistance;
+		public float shakingSpeed = 0.1f;
 		
 		private Vector3 _startPosition;
 		private Vector3[] _shakingData;
@@ -57,7 +58,7 @@ namespace EVGame.Action
 		public override void onStop (GameObject target)
 		{
 			base.onStop (target);
-			
+
 			target.transform.position = _startPosition;
 		}
 		

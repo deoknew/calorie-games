@@ -3,21 +3,25 @@ using System.Collections;
 
 public class KinectGUIHandler : MonoBehaviour 
 {
+	public float chargeTime = 2.0f;
+	public Texture chargeTexture;
+	public Color chargeTextureColor;
+	public AudioClip clickAudio;
+	public bool mouseInputEnabled = false;
+
 	public GUITexture[] GUIList;
-	private bool _mouseInputMode;
 
 
 	void Update ()
 	{
-		if (KinectManager.Instance == null) {
-			float x = Input.mousePosition.x;
-			float y = Input.mousePosition.y;
+		if (false == mouseInputEnabled)
+			return;
 
-			if (Input.GetMouseButton(0)) {
-				receiveClickEvent(x, y, true);
-			} else {
-				receiveMoveEvent(x, y, true);
-			}
+		float x = Input.mousePosition.x;
+		float y = Input.mousePosition.y;
+		
+		if (Input.GetMouseButtonUp(0)) {
+			receiveClickEvent(x, y, true);
 		}
 	}
 
@@ -27,17 +31,39 @@ public class KinectGUIHandler : MonoBehaviour
 		for (int i = 0; i < GUIList.Length; ++i) {
 			GUITexture gui = GUIList[i];
 
+			if (gui.enabled == false || gui.gameObject.activeInHierarchy == false)
+				continue;
+
 			Vector3 screenPoint = new Vector3(x, y, gui.transform.position.z);
 
 			if (false == mouseInputMode) {
 				screenPoint = Camera.main.ViewportToScreenPoint(screenPoint);
 			}
-			
-			if (gui.HitTest(screenPoint)) {
-				GUIEvent eventScript = gui.GetComponent<GUIEvent>();
 
-				if (eventScript != null)
-					eventScript.onMoveEvent(x, y);
+			GUIEvent guiEvent = gui.GetComponent<GUIEvent>();
+
+			if (guiEvent == null)
+				return;
+
+			if (gui.HitTest(screenPoint)) {
+				if (guiEvent.Charge >= 1.0f)
+					return;
+
+				guiEvent.Charge += (Time.deltaTime / chargeTime);
+
+				guiEvent.ChargeTexture = chargeTexture;
+				guiEvent.ChargeTextureColor = chargeTextureColor;
+
+				if (guiEvent.Charge > 1.0f) {
+					guiEvent.Charge = 1.0f;
+					guiEvent.onClickEvent(x, y);
+					if (clickAudio)
+						AudioSource.PlayClipAtPoint(clickAudio, transform.position, 1.0f);
+				}
+				guiEvent.onMoveEvent(x, y);
+
+			} else {
+				guiEvent.Charge = 0.0f;
 			}
 		}
 	}
@@ -48,6 +74,9 @@ public class KinectGUIHandler : MonoBehaviour
 		for (int i = 0; i < GUIList.Length; ++i) {
 			GUITexture gui = GUIList[i];
 
+			if (gui.enabled == false || gui.gameObject.activeInHierarchy == false)
+				continue;
+
 			Vector3 screenPoint = new Vector3(x, y, gui.transform.position.z);
 
 			if (false == mouseInputMode) {
@@ -55,10 +84,14 @@ public class KinectGUIHandler : MonoBehaviour
 			}
 
 			if (gui.HitTest(screenPoint)) {
-				GUIEvent eventScript = gui.GetComponent<GUIEvent>();
+				GUIEvent guiEvent = gui.GetComponent<GUIEvent>();
 				
-				if (eventScript != null)
-					eventScript.onClickEvent(x, y);
+				if (guiEvent != null) {
+					guiEvent.onClickEvent(x, y);
+
+					if (clickAudio)
+						AudioSource.PlayClipAtPoint(clickAudio, transform.position, 1.0f);
+				}
 			}
 		}
 	}

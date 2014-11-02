@@ -178,7 +178,7 @@ public class KinectManager : MonoBehaviour
 	private ClippedLegsFilter[] clippedLegsFilter;
 	private BoneOrientationsConstraint boneConstraintsFilter;
 	private SelfIntersectionConstraint selfIntersectionConstraint;
-	
+
 	
 	// returns the single KinectManager instance
     public static KinectManager Instance
@@ -768,9 +768,10 @@ public class KinectManager : MonoBehaviour
 	
 	
 	//----------------------------------- end of public functions --------------------------------------//
-
+	
+	
 	void Start()
-	{
+	{	
 		//CalibrationText = GameObject.Find("CalibrationText");
 		int hr = 0;
 		
@@ -905,8 +906,11 @@ public class KinectManager : MonoBehaviour
 			kinectToWorld.SetTRS(new Vector3(0.0f, SensorHeight, 0.0f), quatTiltAngle, Vector3.one);
 			flipMatrix = Matrix4x4.identity;
 			flipMatrix[2, 2] = -1;
-			
-			instance = this;
+
+			if (instance == null) {
+				instance = this;
+			}
+
 			DontDestroyOnLoad(gameObject);
 		}
 		catch(DllNotFoundException e)
@@ -1462,7 +1466,7 @@ public class KinectManager : MonoBehaviour
 			// Null out the ID and reset all the models associated with that ID.
 			Player1ID = 0;
 			Player1Calibrated = false;
-			
+
 			foreach(AvatarController controller in Player1Controllers)
 			{
 				controller.RotateToCalibrationPose(UserId, IsCalibrationNeeded());
@@ -1527,7 +1531,9 @@ public class KinectManager : MonoBehaviour
 	void ProcessSkeleton()
 	{
 		List<uint> lostUsers = new List<uint>();
-		lostUsers.AddRange(allUsers);
+
+		if (allUsers != null)
+			lostUsers.AddRange(allUsers);
 		
 		// calculate the time since last update
 		float currentNuiTime = Time.realtimeSinceStartup;
@@ -1537,7 +1543,7 @@ public class KinectManager : MonoBehaviour
 		{
 			KinectWrapper.NuiSkeletonData skeletonData = skeletonFrame.SkeletonData[i];
 			uint userId = skeletonData.dwTrackingID;
-			
+
 			if(skeletonData.eTrackingState == KinectWrapper.NuiSkeletonTrackingState.SkeletonTracked)
 			{
 				// get the skeleton position
@@ -1800,6 +1806,7 @@ public class KinectManager : MonoBehaviour
 		
 		aTexture.Apply();
 	}
+
 	
 	// draws a line in a texture
 	private void DrawLine(Texture2D a_Texture, int x1, int y1, int x2, int y2, Color a_Color)

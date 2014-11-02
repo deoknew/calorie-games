@@ -22,12 +22,21 @@ public class GameManager : MonoBehaviour
 
 	private GameState _currentState;
 
+	private GameState _prevState;
+	private bool _kinectCheckingLock;
+
 
 	public bool isGameRunning()
 	{
 		return (_currentState == GameState.RUNNING);
 	}
-	
+
+
+	public bool isGameOpening()
+	{
+		return (_currentState == GameState.OPENING);
+	}
+
 	
 	public bool isGamePause()
 	{
@@ -90,7 +99,10 @@ public class GameManager : MonoBehaviour
 
 	void checkKinectCalibration()
 	{
-		if (_currentState == GameState.RUNNING || _currentState == GameState.PAUSE) {
+		if (_kinectCheckingLock)
+			return;
+
+		//if (_currentState == GameState.RUNNING || _currentState == GameState.PAUSE) {
 			KinectManager kinectManager = KinectManager.Instance;
 			if (kinectManager == null)
 				return;
@@ -98,12 +110,17 @@ public class GameManager : MonoBehaviour
 			bool isUserDetected = KinectManager.Instance.IsUserDetected();
 
 			if (isUserDetected) {
-				if (isGamePause())
+				if (isGamePause()) {
 					resumeGame();
+					_kinectCheckingLock = true;
+				}
 			} else {
-				pauseGame();
+				if (!isGamePause()) {
+					pauseGame();
+					_kinectCheckingLock = true;
+				}
 			}
-		}
+		//}
 	}
 
 
@@ -183,7 +200,7 @@ public class GameManager : MonoBehaviour
 		if (pauseModule == null)
 			return;
 
-		pauseModule.OnFinished = null;
+		pauseModule.OnFinished = new GameModule.OnFinishedDelegate(onPauseFinished);
 		pauseModule.start(gameData);
 	}
 
@@ -215,9 +232,19 @@ public class GameManager : MonoBehaviour
 	}
 
 
+	private void onPauseFinished()
+	{
+		_kinectCheckingLock = false;
+	}
+
+
 	private void onResumeFinished()
 	{
-		updateState(GameState.RUNNING);
+		//updateState(GameState.RUNNING);
+		_currentState = _prevState;
+		Time.timeScale = 1;
+
+		_kinectCheckingLock = false;
 	}
 	
 
@@ -248,15 +275,13 @@ public class GameManager : MonoBehaviour
 			break;
 			
 		case GameState.RUNNING:
-			if (_currentState == GameState.RESUME) {
-				Time.timeScale = 1;
-			} else {
-				startRunningModule();
-			}
+			startRunningModule();
 			break;
 			
 		case GameState.PAUSE:
 			Time.timeScale = 0;
+			_prevState = _currentState;
+
 			startPauseModule();
 			break;
 

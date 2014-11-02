@@ -11,6 +11,10 @@ public class RunningGameModule : GameModule
 
 	public int playTime = 60;
 
+	public bool tutorialEnabled;
+
+	public AudioClip bgAudio;
+
 	public GUIText scoreText;
 	public GUIText timer;  //타이머 텍스트 
 	public GUITexture feverTimeText;
@@ -40,7 +44,13 @@ public class RunningGameModule : GameModule
 	
 	public int[] foodIdArray;  //발사할 음식 인덱스 배열 
 	public int [] NumberOfCollision;	
-	
+
+	public GameModule tutorialModule;
+	public GameObject tutorialMenuGuiLayer;
+	public GameAction tutorialMenuAction;
+
+	public GameAction readyAction;
+
 	private int firstCalorie;
 	private int secondCalorie;
 	private int thirdCalorie;
@@ -56,15 +66,21 @@ public class RunningGameModule : GameModule
 	private float startTime;
 	
 	private Hashtable _foodImageCache;
-
+	
 	private float sLightTime;
 	private Vector3 startFeverTextScale;
 
 	private bool isFirst=true;
-
+	
 	private bool _isFeverTime;
 	public bool IsFeverTime {
 		get { return _isFeverTime; }
+	}
+	
+	private bool _tutorialRunning;
+	public bool isTutorialRunning()
+	{
+		return _tutorialRunning;
 	}
 	
 	private static RunningGameModule _instance;
@@ -93,11 +109,9 @@ public class RunningGameModule : GameModule
 		resetCombo ();
 
 		foodIdArrayCreate();
-
 		loadFoodImages ();
 
-		if (guiLayer)
-			guiLayer.SetActive (true);
+		showTutorialMenu ();
 	}
 
 
@@ -112,17 +126,85 @@ public class RunningGameModule : GameModule
 		string gradeText = getGradeText(grade);
 		_gameData.rank = gradeText;
 
+		_gameData.calorie = getCalorieFromDistance (_gameData.distance);
+
 		// 소수점 두 번째 자리까지 표시
 		float roundedCalorie = Mathf.Round(_gameData.calorie * 100) / 100;
 		_gameData.calorie = roundedCalorie;
+
+		if (KinectManager.Instance != null)
+			KinectManager.Instance.DisplayColorMap = false;
 
 		if (guiLayer)
 			guiLayer.SetActive (false);
 	}
 
 
+	public void showTutorialMenu()
+	{
+		_tutorialRunning = true;
+
+		if (tutorialMenuGuiLayer != null) {
+			GameAction.invoke(tutorialMenuAction.gameObject);
+			tutorialMenuGuiLayer.SetActive (true);
+		}
+
+		if (KinectManager.Instance != null)
+			KinectManager.Instance.DisplayColorMap = false;
+	}
+
+
+	public void startTutorial()
+	{
+		if (tutorialModule != null && tutorialEnabled) {
+			tutorialModule.OnFinished = new GameModule.OnFinishedDelegate(onTutorialFinished);
+			tutorialModule.start ();
+
+			if (KinectManager.Instance != null)
+				KinectManager.Instance.DisplayColorMap = true;
+
+		} else {
+			_tutorialRunning = false;
+			onTutorialFinished();
+		}
+	}
+
+
+	public void skipTutorial()
+	{
+		if (tutorialMenuGuiLayer != null)
+			tutorialMenuGuiLayer.SetActive (true);
+
+		onTutorialFinished ();
+	}
+
+
+	private void onTutorialFinished()
+	{	
+		AudioUtils.stopAllAudioSources ();
+		AudioSource.PlayClipAtPoint(bgAudio, transform.position, 1.0f);
+
+		GameAction.invoke (readyAction.gameObject, new GameAction.onFinished(onReadyActionFinished));
+	}
+
+
+	private void onReadyActionFinished()
+	{
+		if (guiLayer)
+			guiLayer.SetActive (true);
+		
+		_tutorialRunning = false;
+
+		if (KinectManager.Instance != null)
+			KinectManager.Instance.DisplayColorMap = true;
+	}
+
+
 	protected override void onUpdate ()
 	{
+		if (isTutorialRunning ())
+			return;
+
 		timerUI ();
 		updateScoreText();
 		if(time >= 50.0f && time <= 50.3f)
@@ -192,8 +274,9 @@ public class RunningGameModule : GameModule
 			*/
 			
 			/////
-			sLightTime +=Time.deltaTime;
-			if(sLightTime<=0.05f)
+			sLightTime += Time.deltaTime;
+
+			if (sLightTime <= 0.2f)
 			{
 				/*if(spotLight1.intensity==0)
 				{
@@ -232,8 +315,8 @@ public class RunningGameModule : GameModule
 					spotLight6.color=Color.cyan;
 				}
 			}
-			else if(sLightTime>=0.1f)
-				sLightTime=0;
+			else if(sLightTime > 0.2f)
+				sLightTime = 0;
 			/////
 			
 		}
@@ -275,11 +358,10 @@ public class RunningGameModule : GameModule
 		
 		foreach (Transform obj in projectiles) {
 			CalorieFoodObject foodObject = obj.gameObject.GetComponent<CalorieFoodObject>();
-			
-			string texturePath = "file://" + Application.dataPath + "\\Images\\" + foodObject.imageName;
-			WWW textureLoad = new WWW (texturePath);
-			
-			_foodImageCache.Add (foodObject.imageName, textureLoad.texture);
+			string imageName = "texture/Food/" + foodObject.imageName.Replace(".png", "");
+			Texture2D texture = Resources.Load<Texture2D>(imageName);
+
+			_foodImageCache.Add (foodObject.imageName, texture);
 		}
 	}
 
@@ -363,6 +445,16 @@ public class RunningGameModule : GameModule
 			foodBackGround[foodNum2].transform.position = Vector3.Slerp (firstPoint, secondPoint, fracComplete);
 			
 		}
+	}
+
+
+	public void onFoodDefenced(CalorieFoodObject foodObject)
+	{
+		addCombo ();
+		showCalorie (foodObject.calorie);
+		addScore (foodObject.calorie);
+		showFoodImage (foodObject.imageName);
+		CheckFoodCrash (foodObject.foodId);
 	}
 
 
@@ -504,7 +596,7 @@ public class RunningGameModule : GameModule
 	
 	public void addMovingDistance(float distance)
 	{
-		_gameData.calorie += getCalorieFromDistance(distance);
+		_gameData.distance += distance;
 	}
 	
 	
@@ -512,7 +604,7 @@ public class RunningGameModule : GameModule
 	{
 		// 임시로 가정된 수치로 계산함
 		
-		const float K = 0.000800f; //0.000325f << original
+		const float K = 0.000487f;
 		const float U = 0.1615f;
 		
 		float calorie = 0.0f;
@@ -520,7 +612,8 @@ public class RunningGameModule : GameModule
 		
 		return calorie;
 	}
-	
+
+
 	public void CheckFoodCrash(int FoodID)
 	{
 		NumberOfCollision [FoodID] += 1;
@@ -563,7 +656,7 @@ public class RunningGameModule : GameModule
 
 	private int calculateGrade(int score, float calorie)
 	{
-		return (score / 3000);
+		return (score / 4000);
 	}
 	
 	

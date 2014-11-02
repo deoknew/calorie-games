@@ -5,26 +5,19 @@ namespace EVGame.Action
 {
 	public class TalkAction : GameAction
 	{
-		private string _startText;
+		public string talkText;
+		public float talkDuration;
 		
 		
 		public override void onStart (GameObject target)
 		{
 			base.onStart (target);
-			
-			if (target.guiText != null) {
-				_startText = targetObject.guiText.text;
-				target.guiText.enabled = false;
-			}
 		}
 		
 		
 		public override void onStop (GameObject target)
 		{
 			base.onStop (target);
-			
-			if (target.guiText != null)
-				target.guiText.text = _startText;
 		}
 		
 		
@@ -32,13 +25,15 @@ namespace EVGame.Action
 		{
 			if (target.guiText == null)
 				return;
-			
-			string talkText = _startText;
-			
+
 			if (talkText == null)
 				return;
-			
-			int textLength = (int)(talkText.Length * progress);
+
+			float talkProgress = progress * (duration / talkDuration);
+			if (talkProgress > 1.0f)
+				talkProgress = 1.0f;
+
+			int textLength = (int)(talkText.Length * talkProgress);
 			target.guiText.text = talkText.Substring(0, textLength);
 		}
 	}

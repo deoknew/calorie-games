@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using EVGame.Module;
+using System.IO;
 
 public class ResultGameModule : GameModule
 {
@@ -17,7 +18,7 @@ public class ResultGameModule : GameModule
 	public Transform bestFoodPoint;
 	public GameObject resultBackground;
 	public GameObject bestFoodParticle;
-	/// <summary>
+
 	public GameObject effectParticle1;
 	public GameObject effectParticle2;
 	public GameObject effectParticle3;
@@ -28,7 +29,8 @@ public class ResultGameModule : GameModule
 
 	public AudioClip finishAudio;
 
-	/// </summary>
+	public GameModule rankingModule;
+
 	private GameObject _bestFoodObject;
 
 	private float _calorieValue;
@@ -42,6 +44,7 @@ public class ResultGameModule : GameModule
 	private int _currentScore;
 	private float _currentPosition;
 
+	private bool _rankingModuleRunning;
 
 	protected override void onStart()
 	{
@@ -54,7 +57,9 @@ public class ResultGameModule : GameModule
 		_maxComboValue = _gameData.maxCombo;
 		_bestFoodIndex = _gameData.bestFoodIndex;
 		_gradeValue = _gameData.rank;
-		
+
+		_rankingModuleRunning = false;
+
 		_currentPosition = resultBackground.transform.position.y;
 
 		if (finishAudio != null) {
@@ -63,7 +68,10 @@ public class ResultGameModule : GameModule
 
 		if (guiLayer)
 			guiLayer.SetActive (true);
+
+		saveGameRecord ();
 	}
+
 
 	protected override void onFinish ()
 	{
@@ -91,8 +99,19 @@ public class ResultGameModule : GameModule
 		
 		if (scoreText != null && _currentScore < _scoreValue) {
 			_currentScore += (_scoreValue / 40);
-			if (_currentScore > _scoreValue)
+			if (_currentScore > _scoreValue) {
 				_currentScore = _scoreValue;
+
+				// 스코어 표시가 끝나면 신기록 표시
+				if (rankingModule != null) {
+					if (!_rankingModuleRunning) {
+						if (_currentScore > RankingManager.getRankScore()) {
+							startRankingModule();
+							_rankingModuleRunning = true;
+						}
+					}
+				}
+			}
 			
 			scoreText.text = string.Format("{0}", _currentScore);
 		}
@@ -107,7 +126,7 @@ public class ResultGameModule : GameModule
 
 		if (resultBackground != null) {
 			if (_currentPosition > MAX_BG_POSITION) {
-				_currentPosition -= 0.08f;
+				_currentPosition -= 0.06f;
 				if (_currentPosition < MAX_BG_POSITION) {
 					_currentPosition = MAX_BG_POSITION;
 					showResult();
@@ -167,10 +186,47 @@ public class ResultGameModule : GameModule
 		createdObject.GetComponent<CalorieFoodObject>().enabled = false;
 		createdObject.transform.localScale *= 1.5f;
 
+		Shader shader = Shader.Find ("Unlit/Texture");
+		if (shader != null)
+			createdObject.renderer.material.shader = shader;
+
 		TrailRenderer trail = createdObject.GetComponent<TrailRenderer>();
 		if (trail != null)
 			trail.time = 0;
 
 		return createdObject;
+	}
+
+
+	private void startRankingModule()
+	{
+		if (guiLayer != null)
+			guiLayer.SetActive (false);
+
+		if (rankingModule != null)
+			rankingModule.start ();
+	}
+
+
+	private void onRankingModuleFinished()
+	{
+		if (guiLayer != null)
+			guiLayer.SetActive (true);
+	}
+
+
+	private void saveGameRecord()
+	{
+		System.DateTime origin = new System.DateTime(1970, 1, 1, 0, 0, 0, 0);
+		System.TimeSpan diff = System.DateTime.Now - origin;
+		int totalSeconds = (int)System.Math.Floor(diff.TotalSeconds);
+
+		StreamWriter sw = new StreamWriter("./" + totalSeconds + ".log");
+		sw.WriteLine (System.DateTime.Now);
+		sw.WriteLine(_gameData.distance);
+		sw.WriteLine(_gameData.calorie);
+		sw.WriteLine(_gameData.score);
+		sw.Flush();
+		sw.Close();
 	}
 }

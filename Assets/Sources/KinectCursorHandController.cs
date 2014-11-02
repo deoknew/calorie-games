@@ -5,16 +5,21 @@ using System.Collections.Generic;
 public class KinectCursorHandController : KinectHandController
 {
 	private const float NULL_POSITION = 2014.7f;
-	private const float CHECK_TIME = 0.15f;
-	private const float CLICK_THRESHOLD = 0.2f;
-	private const float MOVE_SPEED_X = 0.5f;
-	private const float MOVE_SPEED_Y = 0.8f;
+	private const float CHECK_TIME = 0.35f;
+	private const float CLICK_THRESHOLD = 0.15f;
+	private const float OFFSET_X = 0.5f;
+	private const float OFFSET_Y = 1.5f;
+	private const float SCALE_X = 1.5f;
+	private const float SCALE_Y = 1.3f;
+
 
 	private float _prevZ;
 	private float _tickTime;
 
 	public GameObject kinectGUIHandler;
 	public GameObject clickParticle;
+	public bool pushClickEnabled = false;
+	public bool ignoreGameManager = false;
 
 
 	void Start()
@@ -38,8 +43,26 @@ public class KinectCursorHandController : KinectHandController
 
 	public override void onUpdateHand(Vector3 leftHandPos, Vector3 rightHandPos)
 	{
-		if (!GameManager.Instance.isGameResult())
-			return;
+		if (!ignoreGameManager) {
+			if (GameManager.Instance == null)
+				return;
+
+			if (GameManager.Instance.isGameOpening())
+				setVisibleGameCursor(true);
+
+			if (GameManager.Instance.isGameRunning ()) {
+				if (RunningGameModule.Instance.tutorialModule.enabled) {
+					setVisibleGameCursor (false);
+					return;
+				} else if (!RunningGameModule.Instance.isTutorialRunning ()) {
+					setVisibleGameCursor (false);
+					return;
+				}
+			}
+			
+			if (GameManager.Instance.isGameResult ())
+				setVisibleGameCursor (true);
+		}
 
 		if (false == isPlayerCalibrated()) {
 			setVisibleGameCursor(false);
@@ -49,22 +72,27 @@ public class KinectCursorHandController : KinectHandController
 
 		_tickTime += Time.deltaTime;
 
-		rightHandPos.x += MOVE_SPEED_X;
-		rightHandPos.y -= MOVE_SPEED_Y;
+		rightHandPos.x *= SCALE_X;
+		rightHandPos.y *= SCALE_Y;
+
+		rightHandPos.x += OFFSET_X;
+		rightHandPos.y -= OFFSET_Y;
 		
 		if (_prevZ == NULL_POSITION && rightHandPos.z > 0.0f) {
 			_prevZ = rightHandPos.z;
 
 		} else if (_prevZ != NULL_POSITION) {
-			if (_tickTime >= CHECK_TIME) {
-				if (_prevZ - rightHandPos.z > CLICK_THRESHOLD) {
-					if (handlerScript != null) {
-						handlerScript.receiveClickEvent(rightHandPos.x, rightHandPos.y);
-						showClickParticle(rightHandPos);
+			if (pushClickEnabled) {
+				if (_tickTime >= CHECK_TIME) {
+					if (_prevZ - rightHandPos.z > CLICK_THRESHOLD) {
+						if (handlerScript != null) {
+							handlerScript.receiveClickEvent(rightHandPos.x, rightHandPos.y);
+							showClickParticle(rightHandPos);
+						}
 					}
+					_tickTime = 0.0f;
+					_prevZ = rightHandPos.z;
 				}
-				_tickTime = 0.0f;
-				_prevZ = rightHandPos.z;
 			}
 		}
 

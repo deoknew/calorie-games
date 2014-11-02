@@ -5,12 +5,17 @@ namespace EVGame.Action
 {
 	public class AudioAction : GameAction
 	{
-		public AudioClip audioClip; 
+		public AudioClip audioClip;
+		public float volume = 1.0f;
+		public bool stopAllAudioWhenPlay = false;
 		
 		
 		public override void onStart(GameObject target) 
 		{
-			AudioSource.PlayClipAtPoint(audioClip, transform.position, 1.0f);
+			if (stopAllAudioWhenPlay)
+				AudioUtils.stopAllAudioSources ();
+
+			AudioSource.PlayClipAtPoint(audioClip, transform.position, volume);
 		}
 		
 		
